@@ -1,0 +1,35 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>Board Service</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.6.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="/css/app.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+</head>
+<body>
+<div id="header"class="d-flex bd-highlight">
+    <a href="/" class="p-2 flex-grow-1 bd-highlight">Board Service</a>
+    <form action="/posts/search" method="GET" class="form-inline p-2 bd-highlight" role="search">
+        <input type="text" name="keyword" class="form-control" id="search" placeholder="검색">
+        <button class="btn btn-success bi bi-search"></button>
+    </form>
+</div>
+
+<nav id ="nav">
+    <div class="text-right">
+        {{#user}}
+            <span class="mx-3">{{user.nickname}}님 안녕하세요!</span>
+            <a href="/logout" class="btn btn-outline-dark">로그아웃</a>
+            <a href="/modify" class="btn btn-outline-dark bi bi-gear"></a>
+        {{/user}}
+        {{^user}}
+            <a href="/oauth2/authorization/naver" role="button" class="btn btn-outline-success"><img id="img" src="/img/naver.ico"/> 로그인</a>
+            <a href="/oauth2/authorization/google" role="button" class="btn btn-outline-danger bi bi-google"> 로그인</a>
+            <a href="/auth/login" role="button" class="btn btn-outline-dark bi bi-lock-fill"> 로그인</a>
+            <a href="/auth/join" role="button" class="btn btn-outline-dark bi bi-person-circle"> 회원가입</a>
+        {{/user}}
+    </div>
+</nav>
+

@@ -1,0 +1,47 @@
+{{>layout/header}}
+<div id="posts_list">
+    <table id="table" class="table table-horizontal">
+        <thead id="thead">
+        <tr>
+            <th>번호</th>
+            <th class="col-md-6 text-center">제목</th>
+            <th>작성자</th>
+            <th>작성일</th>
+            <th>조회수</th>
+        </tr>
+        </thead>
+        <tbody id="tbody">
+        {{#searchList}}
+            <tr>
+                <td>{{id}}</td>
+                <td><a href="/posts/read/{{id}}">{{title}}</a></td>
+                <td>{{writer}}</td>
+                <td>{{modifiedDate}}</td>
+                <td>{{view}}</td>
+            </tr>
+        {{/searchList}}
+        </tbody>
+    </table>
+    <div class="text-right">
+        <a href="/posts/write" role="button" class="btn btn-primary bi bi-pencil-fill"> 글쓰기</a>
+    </div>
+
+    {{! Search Paging }}
+    <div class="pagination justify-content-center">
+        {{#hasPrev}}
+            <a href="/posts/search?keyword={{keyword}}&page={{previous}}" role="button" class="btn btn-lg bi bi-caret-left-square-fill"></a>
+        {{/hasPrev}}
+        {{^hasPrev}}
+            <a href="/posts/search?keyword={{keyword}}&page={{previous}}" role="button" class="btn btn-lg bi bi-caret-left-square-fill disabled"></a>
+        {{/hasPrev}}
+
+        {{#hasNext}}
+            <a href="/posts/search?keyword={{keyword}}&page={{next}}" role="button" class="btn btn-lg bi bi-caret-right-square-fill"></a>
+        {{/hasNext}}
+        {{^hasNext}}
+            <a href="/posts/search?keyword={{keyword}}&page={{next}}" role="button" class="btn btn-lg bi bi-caret-right-square-fill disabled"></a>
+        {{/hasNext}}
+    </div>
+
+</div>
+{{>layout/footer}}
