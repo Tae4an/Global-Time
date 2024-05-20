@@ -1,11 +1,11 @@
 package org.example.service;
 
-import com.coco.board.application.PostsService;
-import com.coco.board.application.dto.PostsDto;
-import com.coco.board.domain.Role;
-import com.coco.board.domain.User;
-import com.coco.board.infrastructure.persistence.PostsRepository;
-import com.coco.board.infrastructure.persistence.UserRepository;
+import org.example.application.PostsService;
+import org.example.application.dto.PostsDto;
+import org.example.domain.Role;
+import org.example.domain.User;
+import org.example.infrastructure.persistence.PostsRepository;
+import org.example.infrastructure.persistence.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
