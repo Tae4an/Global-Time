@@ -7,7 +7,6 @@
                 <label>아이디</label>
                 <input type="text" name="username" value="{{#userDto}}{{userDto.username}}{{/userDto}}" class="form-control" placeholder="아이디를 입력해주세요"/>
                 {{#valid_username}} <span id="valid">{{valid_username}}</span> {{/valid_username}}
-
             </div>
 
             <div class="form-group">
@@ -26,6 +25,24 @@
                 <label>이메일</label>
                 <input type="email" name="email" value="{{#userDto}}{{userDto.email}}{{/userDto}}" class="form-control" placeholder="이메일을 입력해주세요"/>
                 {{#valid_email}} <span id="valid">{{valid_email}}</span> {{/valid_email}}
+            </div>
+
+            <div class="form-group">
+                <label>대학교</label>
+                <input type="text" name="university" value="{{#userDto}}{{userDto.university}}{{/userDto}}" class="form-control" placeholder="대학교를 입력해주세요"/>
+                {{#valid_university}} <span id="valid">{{valid_university}}</span> {{/valid_university}}
+            </div>
+
+            <div class="form-group">
+                <label>국적</label>
+                <select name="nationality" class="form-control">
+                    <option value="Korean">Korean</option>
+                    <option value="Foreigner">Foreigner</option>
+                    <option value="American">American</option>
+                    <option value="Canadian">Canadian</option>
+                    <!-- 추후에 더 많은 국적 추가 -->
+                </select>
+                {{#valid_nationality}} <span id="valid">{{valid_nationality}}</span> {{/valid_nationality}}
             </div>
 
             <button class="btn btn-primary bi bi-person"> 가입</button>
