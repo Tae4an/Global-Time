@@ -30,14 +30,22 @@ public class User extends BaseTimeEntity {
     @Column(nullable = false, length = 50, unique = true)
     private String email;
 
+    @Column(nullable = false)
+    private String university; // 대학교 필드 추가
+
+    @Column(nullable = false)
+    private String nationality; // 국적 필드 추가
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Role role;
 
     /* 회원정보 수정 */
-    public void modify(String nickname, String password) {
+    public void modify(String nickname, String password, String university, String nationality) {
         this.nickname = nickname;
         this.password = password;
+        this.university = university;
+        this.nationality = nationality;
     }
 
     /* 소셜로그인시 이미 등록된 회원이라면 수정날짜만 업데이트해줘서

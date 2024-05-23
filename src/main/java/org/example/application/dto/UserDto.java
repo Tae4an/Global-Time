@@ -37,6 +37,12 @@ public class UserDto {
         @NotBlank(message = "이메일은 필수 입력 값입니다.")
         private String email;
 
+        @NotBlank(message = "대학교는 필수 입력 값입니다.")
+        private String university;
+
+        @NotBlank(message = "국적은 필수 입력 값입니다.")
+        private String nationality;
+
         private Role role;
 
         /* DTO -> Entity */
@@ -47,6 +53,8 @@ public class UserDto {
                     .password(password)
                     .nickname(nickname)
                     .email(email)
+                    .university(university)
+                    .nationality(nationality)
                     .role(role.USER)
                     .build();
             return user;
@@ -67,6 +75,8 @@ public class UserDto {
         private final String username;
         private final String nickname;
         private final String email;
+        private final String university;
+        private final String nationality;
         private final Role role;
         private final String modifiedDate;
 
@@ -76,6 +86,8 @@ public class UserDto {
             this.username = user.getUsername();
             this.nickname = user.getNickname();
             this.email = user.getEmail();
+            this.university = user.getUniversity();
+            this.nationality = user.getNationality();
             this.role = user.getRole();
             this.modifiedDate = user.getModifiedDate();
         }
