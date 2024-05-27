@@ -1,4 +1,14 @@
-{{>layout/header}}
+{{> layout/header}}
+
+<script>
+    function openUniversitySearch() {
+        const url = "/university/search";
+        const name = "University Search";
+        const specs = "width=600,height=400";
+        window.open(url, name, specs);
+    }
+</script>
+
 <div id="posts_list">
     <div class="container col-md-4">
         <form action="/auth/joinProc" method="post">
@@ -29,8 +39,12 @@
 
             <div class="form-group">
                 <label>대학교</label>
-                <input type="text" name="university" value="{{#userDto}}{{userDto.university}}{{/userDto}}" class="form-control" placeholder="대학교를 입력해주세요"/>
-                {{#valid_university}} <span id="valid">{{valid_university}}</span> {{/valid_university}}
+                <div class="input-group">
+                    <input type="text" name="university" id="university" class="form-control" placeholder="대학교를 선택해주세요" readonly />
+                    <div class="input-group-append">
+                        <button type="button" class="btn btn-secondary" onclick="openUniversitySearch()">검색</button>
+                    </div>
+                </div>
             </div>
 
             <div class="form-group">
@@ -50,4 +64,5 @@
         </form>
     </div>
 </div>
-{{>layout/footer}}
+
+{{> layout/footer}}
