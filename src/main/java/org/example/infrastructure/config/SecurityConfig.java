@@ -26,9 +26,7 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final CustomUserDetailsService customUserDetailsService;
-
     private final AuthenticationFailureHandler customFailureHandler;
-
     private final CustomOAuth2UserService customOAuth2UserService;
 
     @Bean
@@ -39,7 +37,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     @Override
     public AuthenticationManager authenticationManagerBean() throws Exception {
-     return super.authenticationManagerBean();
+        return super.authenticationManagerBean();
     }
 
     /* 시큐리티가 로그인 과정에서 password를 가로챌때 어떤 해쉬로 암호화 했는지 확인 */
@@ -52,7 +50,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(WebSecurity web) throws Exception {
         web
-                .ignoring().antMatchers( "/css/**", "/js/**", "/img/**");
+                .ignoring().antMatchers("/css/**", "/js/**", "/img/**");
     }
 
     @Override
@@ -61,7 +59,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf().ignoringAntMatchers("/api/**") /* REST API 사용 예외처리 */
                 .and()
                 .authorizeRequests()
-                .antMatchers("/", "/auth/**", "/posts/read/**", "/posts/search/**").permitAll()
+                .antMatchers("/", "/auth/**", "/posts/read/**", "/posts/search/**", "/university/search").permitAll() // 대학교 검색 URL 접근 허용
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()

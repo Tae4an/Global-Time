@@ -24,9 +24,7 @@ public class UserService {
     /* 회원가입 */
     @Transactional
     public void userJoin(UserDto.Request dto) {
-
         dto.setPassword(encoder.encode(dto.getPassword()));
-
         userRepository.save(dto.toEntity());
     }
 
@@ -50,6 +48,6 @@ public class UserService {
                 new IllegalArgumentException("해당 회원이 존재하지 않습니다."));
 
         String encPassword = encoder.encode(dto.getPassword());
-        user.modify(dto.getNickname(), encPassword);
+        user.modify(dto.getNickname(), encPassword, dto.getUniversity(), dto.getNationality());
     }
 }

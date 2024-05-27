@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>대학교 검색</title>
+    <script>
+        function selectUniversity(name) {
+            window.opener.document.getElementById('university').value = name;
+            window.close();
+        }
+    </script>
+</head>
+<body>
+<div class="container">
+    <form method="get" action="/university/search">
+        <input type="text" name="query" placeholder="대학교 이름 검색"/>
+        <button type="submit">검색</button>
+    </form>
+
+    <ul>
+        {{#universities}}
+            <li>
+                <a href="#" onclick="selectUniversity('{{name}}')">{{name}}</a>
+            </li>
+        {{/universities}}
+    </ul>
+</div>
+</body>
+</html>
