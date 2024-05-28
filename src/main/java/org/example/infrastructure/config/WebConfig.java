@@ -26,7 +26,7 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/api/**")
-                .allowedOrigins("http://10.20.34.151:3000")  // 백엔드 IP 주소와 프론트엔드 포트
+                .allowedOrigins("http://localhost:3000")  // 백엔드 IP 주소와 프론트엔드 포트
                 .allowedMethods("GET", "POST", "PUT", "DELETE")
                 .allowedHeaders("*")
                 .allowCredentials(true);
