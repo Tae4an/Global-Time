@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 
 const UserJoin = () => {
     const [username, setUsername] = useState('');
@@ -15,11 +16,30 @@ const UserJoin = () => {
         window.open(url, name, specs);
     };
 
+    const handleSubmit = async (event) => {
+        event.preventDefault();
+        try {
+            const response = await axios.post('http://localhost:8080/api/auth/joinProc', {
+                username,
+                password,
+                nickname,
+                email,
+                university,
+                nationality
+            });
+            if (response.status === 200) {
+                alert('회원가입이 완료되었습니다.');
+                window.location.href = '/auth/login';
+            }
+        } catch (error) {
+            console.error('There was an error!', error);
+        }
+    };
+
     return (
         <div id="posts_list">
             <div className="container col-md-4">
-                <form action="/auth/joinProc" method="post">
-                    <input type="hidden" name="_csrf" value="{{_csrf.token}}" />
+                <form onSubmit={handleSubmit}>
                     <div className="form-group">
                         <label>아이디</label>
                         <input
@@ -76,6 +96,7 @@ const UserJoin = () => {
                                 name="university"
                                 id="university"
                                 value={university}
+                                onChange={(e) => setUniversity(e.target.value)}
                                 className="form-control"
                                 placeholder="대학교를 선택해주세요"
                                 readOnly
@@ -102,7 +123,7 @@ const UserJoin = () => {
                         </select>
                     </div>
 
-                    <button className="btn btn-primary bi bi-person">가입</button>
+                    <button type="submit" className="btn btn-primary bi bi-person">가입</button>
                     <a href="/" role="button" className="btn btn-info bi bi-arrow-return-left">목록</a>
                 </form>
             </div>
