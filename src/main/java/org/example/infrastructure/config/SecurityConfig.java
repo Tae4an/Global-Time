@@ -1,7 +1,6 @@
 package org.example.infrastructure.config;
 
 import org.example.application.security.auth.CustomUserDetailsService;
-import org.example.application.security.oauth.CustomOAuth2UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,15 +11,9 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 
 @RequiredArgsConstructor
 @Configuration
@@ -30,7 +23,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final CustomUserDetailsService customUserDetailsService;
     private final AuthenticationFailureHandler customFailureHandler;
-    private final CustomOAuth2UserService customOAuth2UserService;
 
     @Bean
     public BCryptPasswordEncoder encoder() {
@@ -59,7 +51,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .cors().and()
                 .csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/", "/auth/**", "/posts/read/**", "/posts/search/**", "/university/search", "/api/posts/**").permitAll()
+                .antMatchers("/", "/auth/**", "/posts/read/**", "/posts/search/**", "/university/search","/api/posts/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()
@@ -71,12 +63,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .logout()
                 .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
                 .invalidateHttpSession(true).deleteCookies("JSESSIONID")
-                .logoutSuccessUrl("/")
-                .and()
-                .oauth2Login()
-                .userInfoEndpoint()
-                .userService(customOAuth2UserService);
+                .logoutSuccessUrl("/");
     }
-
-
 }
