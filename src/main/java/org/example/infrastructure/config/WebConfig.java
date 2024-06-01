@@ -11,15 +11,14 @@ import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.List;
-/**
- * LoginUserArgumentResolver가 인식될 수 있도록 WebMvcConfigurer에 추가
- */
+
 @RequiredArgsConstructor
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
+        registry.addViewController("/").setViewName("forward:/index.html");
         registry.addViewController("/auth/login").setViewName("forward:/index.html");
     }
 
