@@ -27,10 +27,18 @@ public class UserRepositoryTest {
 
     @Test
     public void 유저_생성_가져오기() {
-        String username = "coco";
+        String username = "Taesan";
         String rawPassword = "123!@#qwe";
         String encPassword = encoder.encode(rawPassword);
-        userRepository.save(User.builder().username(username).password(encPassword).nickname("홍길동").email("coco@nate.com").role(Role.USER).build());
+        userRepository.save(User.builder()
+                .username(username)
+                .password(encPassword)
+                .nickname("태산")
+                .email("xotks7524@naver.com")
+                .role(Role.USER)
+                .nationality("Korean") // nationality 설정
+                .university("Seoul University") // university 설정
+                .build());
 
         List<User> userList = userRepository.findAll();
 
