@@ -7,9 +7,13 @@ const UniversitySearch = ({ onSelectUniversity }) => {
 
     const handleSearch = (e) => {
         e.preventDefault();
-        axios.get(`/university/search?query=${query}`)
+        axios.get(`/api/universities/search`, { params: { query: query } })
             .then(response => {
-                setUniversities(response.data);
+                if (Array.isArray(response.data)) {
+                    setUniversities(response.data);
+                } else {
+                    console.error('Response data is not an array', response.data);
+                }
             })
             .catch(error => {
                 console.error('Error fetching universities:', error);
@@ -17,7 +21,11 @@ const UniversitySearch = ({ onSelectUniversity }) => {
     };
 
     const handleSelect = (name) => {
-        onSelectUniversity(name);
+        if (window.opener && window.opener.handleSelectUniversity) {
+            window.opener.handleSelectUniversity(name);
+        } else {
+            console.error('handleUniversitySelect function is not defined in the opener window');
+        }
         window.close();
     };
 
