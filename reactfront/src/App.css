@@ -74,3 +74,11 @@ input:invalid {
 #img { width: 20px; height: auto; padding-bottom: 4px; }
 
 
+.link-button {
+  background: none;
+  border: none;
+  color: blue;
+  text-decoration: underline;
+  cursor: pointer;
+  font-size: 1rem;
+}

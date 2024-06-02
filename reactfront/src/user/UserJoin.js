@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const UserJoin = () => {
     const [username, setUsername] = useState('');
@@ -8,12 +9,30 @@ const UserJoin = () => {
     const [email, setEmail] = useState('');
     const [university, setUniversity] = useState('');
     const [nationality, setNationality] = useState('Korean');
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        window.handleSelectUniversity = (selectedUniversity) => {
+            setUniversity(selectedUniversity);
+        };
+    }, []);
 
     const openUniversitySearch = () => {
         const url = "/university/search";
         const name = "University Search";
         const specs = "width=600,height=400";
-        window.open(url, name, specs);
+        const newWindow = window.open(url, name, specs);
+        if (newWindow) {
+            const timer = setInterval(() => {
+                if (newWindow.closed) {
+                    clearInterval(timer);
+                    if (window.selectedUniversity) {
+                        handleSelectUniversity(window.selectedUniversity);
+                        window.selectedUniversity = null; // 사용 후 초기화
+                    }
+                }
+            }, 500);
+        }
     };
 
     const handleSubmit = async (event) => {
@@ -29,10 +48,17 @@ const UserJoin = () => {
             });
             if (response.status === 200) {
                 alert('회원가입이 완료되었습니다.');
-                window.location.href = '/auth/login';
+                navigate('/auth/login');
             }
         } catch (error) {
-            console.error('There was an error!', error);
+            if (error.response && error.response.data) {
+                // 서버로부터 받은 오류 메시지 처리
+                const errorMessage = Object.values(error.response.data).join('\n');
+                alert(`회원가입 실패: ${errorMessage}`);
+            } else {
+                console.error('There was an error!', error);
+                alert('회원가입 중 오류가 발생했습니다.');
+            }
         }
     };
 
@@ -119,7 +145,6 @@ const UserJoin = () => {
                             <option value="Foreigner">Foreigner</option>
                             <option value="American">American</option>
                             <option value="Canadian">Canadian</option>
-                            {/* Add more nationalities as needed */}
                         </select>
                     </div>
 
