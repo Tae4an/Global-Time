@@ -1,19 +1,45 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 
-const Login = ({ csrfToken, error }) => {
+const Login = ({ error }) => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        // 추가적인 로그인 로직을 여기에 구현
+        try {
+            console.log('Attempting to login with:', { username, password });
+
+            const response = await axios.post('http://localhost:8080/auth/loginProc', {
+                username,
+                password
+            }, {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (response.data.error) {
+                alert(`로그인 실패: ${response.data.message}`);
+            } else {
+                alert('로그인 성공');
+                window.location.href = '/';
+            }
+        } catch (error) {
+            if (error.response) {
+                const errorMessage = error.response.data.message || '로그인 중 오류가 발생했습니다.';
+                alert(`로그인 실패: ${errorMessage}`);
+            } else {
+                console.error('Error during login', error);
+                alert('로그인 중 오류가 발생했습니다.');
+            }
+        }
     };
 
     return (
         <div id="posts_list">
             <div className="container col-md-6">
-                <form action="/auth/loginProc" method="post" onSubmit={handleSubmit}>
-                    <input type="hidden" name="_csrf" value={csrfToken} />
+                <form onSubmit={handleSubmit}>
                     <div className="form-group">
                         <label>아이디</label>
                         <input
@@ -39,8 +65,8 @@ const Login = ({ csrfToken, error }) => {
                     </div>
 
                     <span>
-            {error && <p id="valid" className="alert alert-danger">{error.exception}</p>}
-          </span>
+                        {error && <p id="valid" className="alert alert-danger">{error.exception}</p>}
+                    </span>
 
                     <button type="submit" className="form-control btn btn-primary bi bi-lock-fill">로그인</button>
                 </form>
