@@ -11,10 +11,12 @@ const UserJoin = () => {
     const [nationality, setNationality] = useState('Korean');
     const navigate = useNavigate();
 
+    const handleSelectUniversity = (selectedUniversity) => {
+        setUniversity(selectedUniversity);
+    };
+
     useEffect(() => {
-        window.handleSelectUniversity = (selectedUniversity) => {
-            setUniversity(selectedUniversity);
-        };
+        window.handleSelectUniversity = handleSelectUniversity;
     }, []);
 
     const openUniversitySearch = () => {
