@@ -1,6 +1,8 @@
 package org.example.infrastructure.config;
 
 import org.example.application.security.auth.CustomUserDetailsService;
+import org.example.application.security.auth.CustomUsernamePasswordAuthenticationFilter;
+import org.example.application.security.auth.CustomAuthFailureHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,17 +14,17 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.web.authentication.AuthenticationFailureHandler;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
-@RequiredArgsConstructor
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
+@RequiredArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final CustomUserDetailsService customUserDetailsService;
-    private final AuthenticationFailureHandler customFailureHandler;
+    private final CustomAuthFailureHandler customFailureHandler;
 
     @Bean
     public BCryptPasswordEncoder encoder() {
@@ -45,13 +47,22 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         web.ignoring().antMatchers("/css/**", "/js/**", "/img/**", "/static/**");
     }
 
+    @Bean
+    public CustomUsernamePasswordAuthenticationFilter customUsernamePasswordAuthenticationFilter() throws Exception {
+        CustomUsernamePasswordAuthenticationFilter filter = new CustomUsernamePasswordAuthenticationFilter();
+        filter.setAuthenticationManager(authenticationManagerBean());
+        filter.setFilterProcessesUrl("/auth/loginProc");
+        filter.setAuthenticationFailureHandler(customFailureHandler);
+        return filter;
+    }
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .cors().and()
                 .csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/", "/auth/**", "/posts/read/**", "/posts/search/**", "/university/search", "/api/posts/**","/api/**").permitAll()
+                .antMatchers("/", "/auth/**", "/posts/read/**", "/posts/search/**", "/university/search", "/api/posts/**", "/api/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()
@@ -63,6 +74,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .logout()
                 .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
                 .invalidateHttpSession(true).deleteCookies("JSESSIONID")
-                .logoutSuccessUrl("/");
+                .logoutSuccessUrl("/")
+                .and()
+                .addFilterBefore(customUsernamePasswordAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
     }
 }
