@@ -21,6 +21,12 @@ public class User extends BaseTimeEntity {
     @Column(nullable = false, length = 30, unique = true)
     private String username; // 아이디
 
+    @Column(nullable = false, length = 30)
+    private String realName; // 실명
+
+    @Column(nullable = false, length = 30)
+    private String department; // 학과
+
     @Column(nullable = false, unique = true)
     private String nickname;
 
@@ -36,16 +42,34 @@ public class User extends BaseTimeEntity {
     @Column(nullable = false)
     private String nationality; // 국적 필드 추가
 
+    @Column(nullable = true)
+    private String studentCardUrl; // 학생증 이미지 URL 추가
+
+    @Column(nullable = false)
+    private boolean verified; // 인증 여부 필드 추가
+
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Role role;
 
     /* 회원정보 수정 */
-    public void modify(String nickname, String password, String university, String nationality) {
+    public void modify(String nickname, String password, String university, String nationality, String department) {
         this.nickname = nickname;
         this.password = password;
         this.university = university;
         this.nationality = nationality;
+        this.department = department;
+    }
+
+    /* 학생증 URL 설정 */
+    public void setStudentCardUrl(String studentCardUrl) {
+        this.studentCardUrl = studentCardUrl;
+    }
+
+    /* 인증 여부 설정 */
+    public void setVerified(boolean verified) {
+        this.verified = verified;
     }
 
     /* 소셜로그인시 이미 등록된 회원이라면 수정날짜만 업데이트해줘서
