@@ -5,17 +5,14 @@ import lombok.RequiredArgsConstructor;
 import org.example.application.dto.UserDto;
 import org.example.application.validator.CustomValidators;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.io.IOException;
 import java.util.Map;
 
 /**
@@ -40,31 +37,33 @@ public class UserController {
 
     @PostMapping("/auth/joinProc")
     @ResponseBody
-    public ResponseEntity<?> joinProc(@Valid @RequestBody UserDto.Request dto, Errors errors) {
+    public ResponseEntity<?> joinProc(@Valid @RequestPart("user") UserDto.Request dto, @RequestPart("studentCard") MultipartFile studentCardFile, Errors errors) throws IOException {
         if (errors.hasErrors()) {
             Map<String, String> validatorResult = userService.validateHandling(errors);
             return ResponseEntity.badRequest().body(validatorResult);
         }
-        userService.userJoin(dto);
+        userService.userJoin(dto, studentCardFile);
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/auth/login")
-    public String login() {
-        return "forward:/index.html"; // 리액트 애플리케이션의 엔트리 포인트로 리디렉션
+    @GetMapping("/auth/checkUsername")
+    @ResponseBody
+    public ResponseEntity<?> checkUsername(@RequestParam String username) {
+        boolean exists = userService.checkUsernameExists(username);
+        return ResponseEntity.ok(Map.of("available", !exists));
     }
 
-    @GetMapping("/logout")
-    public String logout(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (auth != null) {
-            new SecurityContextLogoutHandler().logout(request, response, auth);
-        }
-        return "redirect:/";
+    @GetMapping("/auth/checkNickname")
+    @ResponseBody
+    public ResponseEntity<?> checkNickname(@RequestParam String nickname) {
+        boolean exists = userService.checkNicknameExists(nickname);
+        return ResponseEntity.ok(Map.of("available", !exists));
     }
 
-    @GetMapping("/auth/modify")
-    public String modify() {
-        return "forward:/index.html"; // 리액트 애플리케이션의 엔트리 포인트로 리디렉션
+    @PostMapping("/auth/verifyStudent")
+    @ResponseBody
+    public ResponseEntity<?> verifyStudent(@RequestParam Long userId) {
+        userService.verifyStudent(userId);
+        return ResponseEntity.ok().build();
     }
 }
