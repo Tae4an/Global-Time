@@ -7,7 +7,6 @@ import PostRead from './posts/PostRead';
 import UserModify from './user/UserModify';
 import UserJoin from './user/UserJoin';
 import UserLogin from './user/Login';
-import UniversitySearch from './university/UniversitySearch';
 import Header from './layout/Header';
 import Footer from './layout/Footer';
 
@@ -27,7 +26,6 @@ const App = () => {
                 <Route path="/auth/modify" element={<UserModify />} />
                 <Route path="/auth/join" element={<UserJoin />} />
                 <Route path="/auth/login" element={<UserLogin />} />
-                <Route path="/university/search" element={<UniversitySearch />} />
             </Routes>
             <Footer />
         </Router>
