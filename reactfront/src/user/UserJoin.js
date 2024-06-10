@@ -7,7 +7,9 @@ const UserJoin = () => {
     const [username, setUsername] = useState('');
     const [isUsernameAvailable, setIsUsernameAvailable] = useState(null);
     const [password, setPassword] = useState('');
-    const [confirmPassword, setConfirmPassword] = useState(''); // 비밀번호 확인 추가
+    const [confirmPassword, setConfirmPassword] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const [realName, setRealName] = useState('');
     const [department, setDepartment] = useState('');
     const [nickname, setNickname] = useState('');
@@ -57,6 +59,8 @@ const UserJoin = () => {
             if (!nickname) newErrors.nickname = '닉네임을 입력해주세요.';
             if (!realName) newErrors.realName = '실명을 입력해주세요.';
             if (!email) newErrors.email = '이메일을 입력해주세요.';
+            if (!validateEmail(email)) newErrors.email = '올바른 이메일 형식을 입력해주세요.';
+            if (!studentCard) newErrors.studentCard = '학생증을 업로드해주세요.';
         }
         setErrors(newErrors);
         if (Object.keys(newErrors).length > 0) {
@@ -77,16 +81,6 @@ const UserJoin = () => {
     const handleSubmit = async (event) => {
         event.preventDefault();
         if (!validateFields()) return;
-
-        if (isUsernameAvailable === null || isUsernameAvailable === false) {
-            alert('아이디 중복 확인을 해주세요.');
-            return;
-        }
-
-        if (isNicknameAvailable === null || isNicknameAvailable === false) {
-            alert('닉네임 중복 확인을 해주세요.');
-            return;
-        }
 
         const formData = new FormData();
         const user = {
@@ -113,8 +107,18 @@ const UserJoin = () => {
             }
         } catch (error) {
             if (error.response && error.response.data) {
-                const errorMessage = Object.values(error.response.data).join('\n');
-                alert(`회원가입 실패: ${errorMessage}`);
+                const errorData = error.response.data;
+                const newErrors = {};
+                errorData.errors.forEach((err) => {
+                    if (err.field === 'email') {
+                        newErrors.email = err.defaultMessage;
+                    } else if (err.field === 'password') {
+                        newErrors.password = err.defaultMessage;
+                    }
+                    // 필요한 다른 필드에 대한 오류 메시지 추가
+                });
+                setErrors(newErrors);
+                alert(Object.values(newErrors).join('\n'));
             } else {
                 console.error('There was an error!', error);
                 alert('회원가입 중 오류가 발생했습니다.');
@@ -166,6 +170,11 @@ const UserJoin = () => {
         }
     };
 
+    const validateEmail = (email) => {
+        const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return re.test(String(email).toLowerCase());
+    };
+
     const handleInputChange = (e, setter, field) => {
         setter(e.target.value);
         if (errors[field]) {
@@ -181,6 +190,10 @@ const UserJoin = () => {
         } else if (field === 'nickname') {
             setIsNicknameAvailable(null);
         }
+    };
+
+    const togglePasswordVisibility = (setter) => {
+        setter(prevState => !prevState);
     };
 
     return (
@@ -248,27 +261,45 @@ const UserJoin = () => {
                             </div>
                             <div className="form-group">
                                 <label>비밀번호</label>
-                                <input
-                                    type="password"
-                                    name="password"
-                                    value={password}
-                                    onChange={(e) => handleInputChange(e, setPassword, 'password')}
-                                    className={`form-control ${errors.password && 'is-invalid'}`}
-                                    placeholder="비밀번호를 입력해주세요"
-                                />
-                                {errors.password && <div className="invalid-feedback">{errors.password}</div>}
+                                <div className="input-group">
+                                    <input
+                                        type={showPassword ? 'text' : 'password'}
+                                        name="password"
+                                        value={password}
+                                        onChange={(e) => handleInputChange(e, setPassword, 'password')}
+                                        className={`form-control ${errors.password && 'is-invalid'}`}
+                                        placeholder="비밀번호를 입력해주세요"
+                                    />
+                                    <div className="input-group-append">
+                                        <button type="button" className="btn btn-outline-secondary"
+                                                onMouseDown={() => togglePasswordVisibility(setShowPassword)}
+                                                onMouseUp={() => togglePasswordVisibility(setShowPassword)}>
+                                            <i className="bi bi-eye"></i>
+                                        </button>
+                                    </div>
+                                    {errors.password && <div className="invalid-feedback">{errors.password}</div>}
+                                </div>
                             </div>
                             <div className="form-group">
                                 <label>비밀번호 확인</label>
-                                <input
-                                    type="password"
-                                    name="confirmPassword"
-                                    value={confirmPassword}
-                                    onChange={(e) => handleInputChange(e, setConfirmPassword, 'confirmPassword')}
-                                    className={`form-control ${errors.confirmPassword && 'is-invalid'}`}
-                                    placeholder="비밀번호를 다시 입력해주세요"
-                                />
-                                {errors.confirmPassword && <div className="invalid-feedback">{errors.confirmPassword}</div>}
+                                <div className="input-group">
+                                    <input
+                                        type={showConfirmPassword ? 'text' : 'password'}
+                                        name="confirmPassword"
+                                        value={confirmPassword}
+                                        onChange={(e) => handleInputChange(e, setConfirmPassword, 'confirmPassword')}
+                                        className={`form-control ${errors.confirmPassword && 'is-invalid'}`}
+                                        placeholder="비밀번호를 다시 입력해주세요"
+                                    />
+                                    <div className="input-group-append">
+                                        <button type="button" className="btn btn-outline-secondary"
+                                                onMouseDown={() => togglePasswordVisibility(setShowConfirmPassword)}
+                                                onMouseUp={() => togglePasswordVisibility(setShowConfirmPassword)}>
+                                            <i className="bi bi-eye"></i>
+                                        </button>
+                                    </div>
+                                    {errors.confirmPassword && <div className="invalid-feedback">{errors.confirmPassword}</div>}
+                                </div>
                             </div>
                             <div className="form-group">
                                 <label>닉네임</label>
@@ -301,14 +332,16 @@ const UserJoin = () => {
                             </div>
                             <div className="form-group">
                                 <label>이메일</label>
-                                <input
-                                    type="email"
-                                    name="email"
-                                    value={email}
-                                    onChange={(e) => handleInputChange(e, setEmail, 'email')}
-                                    className={`form-control ${errors.email && 'is-invalid'}`}
-                                    placeholder="이메일을 입력해주세요"
-                                />
+                                <div className="input-group">
+                                    <input
+                                        type="email"
+                                        name="email"
+                                        value={email}
+                                        onChange={(e) => handleInputChange(e, setEmail, 'email')}
+                                        className={`form-control ${errors.email && 'is-invalid'}`}
+                                        placeholder="이메일을 입력해주세요"
+                                    />
+                                </div>
                                 {errors.email && <div className="invalid-feedback">{errors.email}</div>}
                             </div>
                             <div className="form-group">
@@ -331,8 +364,9 @@ const UserJoin = () => {
                                     type="file"
                                     name="studentCard"
                                     onChange={handleFileChange}
-                                    className="form-control"
+                                    className={`form-control ${errors.studentCard && 'is-invalid'}`}
                                 />
+                                {errors.studentCard && <div className="invalid-feedback">{errors.studentCard}</div>}
                             </div>
                             <button type="button" className="btn btn-secondary" onClick={handlePreviousStep}>이전</button>
                             <button type="submit" className="btn btn-primary bi bi-person">가입</button>
