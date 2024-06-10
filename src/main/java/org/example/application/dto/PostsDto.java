@@ -35,7 +35,7 @@ public class PostsDto {
                     .title(title)
                     .writer(writer)
                     .content(content)
-                    .view(0)
+                    .view(view)
                     .user(user)
                     .build();
 
