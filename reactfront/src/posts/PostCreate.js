@@ -1,26 +1,37 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { useUser } from '../context/UserContext';
 
 const PostCreate = () => {
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
+    const { user } = useUser(); // 로그인한 사용자의 정보를 가져옴
     const navigate = useNavigate();
 
-    const handleSave = () => {
+    const handleSave = async () => {
+        if (!user || !user.username) {
+            alert('로그인이 필요합니다.');
+            return;
+        }
+
         const postData = {
             title,
-            writer: '작성자', // 실제 사용자 정보를 입력하도록 수정 필요
-            content
+            content,
+            writer: user.username // writer를 user.username으로 설정
         };
 
-        axios.post('/api/posts', postData)
-            .then(() => {
-                navigate('/');
-            })
-            .catch(error => {
-                console.error('There was an error creating the post!', error);
+        try {
+            await axios.post('/api/posts', postData, {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
             });
+            navigate('/posts/list');
+        } catch (error) {
+            console.error('There was an error creating the post!', error);
+            alert(`글 작성 중 오류가 발생했습니다: ${error.response?.data?.message || error.message}`);
+        }
     };
 
     return (
@@ -50,7 +61,7 @@ const PostCreate = () => {
                 </div>
             </form>
             <button type="button" onClick={handleSave} className="btn btn-primary bi bi-pencil-fill"> 작성</button>
-            <a href="/" role="button" className="btn btn-info bi bi-arrow-return-left"> 목록</a>
+            <a href="/posts/list" role="button" className="btn btn-info bi bi-arrow-return-left"> 목록</a>
         </div>
     );
 };

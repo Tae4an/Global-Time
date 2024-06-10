@@ -70,4 +70,7 @@ public class CustomUserDetails implements UserDetails {
 
         return collectors;
     }
+    public String getNickname() {
+        return user.getNickname();
+    }
 }

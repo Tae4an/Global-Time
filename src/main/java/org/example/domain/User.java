@@ -82,4 +82,12 @@ public class User extends BaseTimeEntity {
     public String getRoleValue() {
         return this.role.getValue();
     }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
 }

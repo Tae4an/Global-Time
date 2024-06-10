@@ -24,7 +24,7 @@ public class PostsApiController {
     }
 
     @PostMapping
-    public ResponseEntity<Long> save(@RequestBody PostsDto.Request dto, @RequestParam("nickname") String nickname) {
-        return ResponseEntity.ok(postsService.save(dto, nickname));
+    public ResponseEntity<Long> save(@RequestBody PostsDto.Request dto) {
+        return ResponseEntity.ok(postsService.save(dto, dto.getWriter()));
     }
 }

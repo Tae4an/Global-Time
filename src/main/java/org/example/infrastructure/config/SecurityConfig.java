@@ -1,9 +1,11 @@
 package org.example.infrastructure.config;
 
+import org.example.application.security.auth.CustomAuthenticationSuccessHandler;
 import org.example.application.security.auth.CustomUserDetailsService;
 import org.example.application.security.auth.CustomUsernamePasswordAuthenticationFilter;
 import org.example.application.security.auth.CustomAuthFailureHandler;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -25,6 +27,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final CustomUserDetailsService customUserDetailsService;
     private final CustomAuthFailureHandler customFailureHandler;
+    private final CustomAuthenticationSuccessHandler customSuccessHandler;
+
 
     @Bean
     public BCryptPasswordEncoder encoder() {
@@ -53,29 +57,37 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         filter.setAuthenticationManager(authenticationManagerBean());
         filter.setFilterProcessesUrl("/auth/loginProc");
         filter.setAuthenticationFailureHandler(customFailureHandler);
+        filter.setAuthenticationSuccessHandler(customSuccessHandler);
         return filter;
     }
 
+    @Autowired
+    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
+        auth.inMemoryAuthentication()
+                .withUser("admin").password("{noop}adminpass").roles("ADMIN");
+    }
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .cors().and()
                 .csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/", "/auth/**", "/posts/read/**", "/posts/search/**", "/university/search", "/api/posts/**", "/api/**").permitAll()
-                .anyRequest().authenticated()
+                    .antMatchers("/api/admin/**").hasRole("ADMIN")
+                    .antMatchers("/", "/auth/**", "/posts/read/**", "/posts/search/**", "/university/search", "/api/posts/**", "/api/**").permitAll()
+                    .anyRequest().authenticated()
                 .and()
                 .formLogin()
-                .loginPage("/auth/login")
-                .loginProcessingUrl("/auth/loginProc")
-                .failureHandler(customFailureHandler)
+                    .loginPage("/auth/login")
+                    .loginProcessingUrl("/auth/loginProc")
+                    .failureHandler(customFailureHandler)
+                    .successHandler(customSuccessHandler)
                 .defaultSuccessUrl("/")
                 .and()
                 .logout()
-                .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-                .invalidateHttpSession(true).deleteCookies("JSESSIONID")
-                .logoutSuccessUrl("/")
+                    .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+                    .invalidateHttpSession(true).deleteCookies("JSESSIONID")
+                    .logoutSuccessUrl("/")
                 .and()
-                .addFilterBefore(customUsernamePasswordAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+                    .addFilterBefore(customUsernamePasswordAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
     }
 }
