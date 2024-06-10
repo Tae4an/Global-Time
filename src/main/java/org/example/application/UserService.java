@@ -13,7 +13,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -73,5 +75,11 @@ public class UserService {
     @Transactional(readOnly = true)
     public boolean checkNicknameExists(String nickname) {
         return userRepository.existsByNickname(nickname);
+    }
+
+    @Transactional(readOnly = true)
+    public List<UserDto.Response> getUsersForApproval() {
+        List<User> users = userRepository.findAllByVerifiedFalse();
+        return users.stream().map(UserDto.Response::new).collect(Collectors.toList());
     }
 }
