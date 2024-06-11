@@ -12,30 +12,61 @@ import Header from './layout/Header';
 import Footer from './layout/Footer';
 import AdminPage from "./admin/AdminPage";
 import IndexList from "./IndexList";
+import PrivateRoute from './routes/PrivateRoute';
+import Login from "./user/Login";
 
 const App = () => {
     useEffect(() => {
-
     }, []);
 
     return (
         <UserProvider>
-        <Router>
-            <Header />
-            <Routes>
-                <Route exact path="/" element={<UserLogin />} />
-                <Route path="/admin/user" element={<AdminPage />} />
-                <Route path="/posts/list" element={<PostList />} />
-                <Route path="/posts/write" element={<PostWrite />} />
-                <Route path="/posts/update/:id" element={<PostUpdate />} />
-                <Route path="/posts/read/:id" element={<PostRead />} />
-                <Route path="/posts" element= {<IndexList/>}/>
-                <Route path="/auth/modify" element={<UserModify />} />
-                <Route path="/auth/join" element={<UserJoin />} />
-                <Route path="/auth/login" element={<UserLogin />} />
-            </Routes>
-            <Footer />
-        </Router>
+            <Router>
+                <Header />
+                <Routes>
+                    <Route exact path="/" element={<Login />} />
+                    <Route path="/admin" element={
+                        <PrivateRoute roles={['ADMIN']}>
+                            <AdminPage />
+                        </PrivateRoute>
+                    } />
+                    <Route path="/posts/list" element={
+                        <PrivateRoute>
+                            <PostList />
+                        </PrivateRoute>
+                    } />
+                    <Route path="/posts/write" element={
+                        <PrivateRoute>
+                            <PostWrite />
+                        </PrivateRoute>
+                    } />
+                    <Route path="/posts/update/:id" element={
+                        <PrivateRoute>
+                            <PostUpdate />
+                        </PrivateRoute>
+                    } />
+                    <Route path="/posts/read/:id" element={
+                        <PrivateRoute>
+                            <PostRead />
+                        </PrivateRoute>
+                    } />
+                    <Route path="/posts" element={
+                        <PrivateRoute>
+                            <IndexList />
+                        </PrivateRoute>
+                    } />
+                    <Route path="/auth/modify" element={
+                        <PrivateRoute>
+                            <UserModify />
+                        </PrivateRoute>
+                    } />
+                    <Route path="/auth/join" element={<UserJoin />} />
+                    <Route path="/auth/login" element={<UserLogin />} />
+                    <Route path="/forbidden" element={<div>접근이 금지되었습니다.</div>} />
+                    <Route path="/unverified" element={<div>승인이 필요합니다. 관리자에게 문의하세요.</div>} />
+                </Routes>
+                <Footer />
+            </Router>
         </UserProvider>
     );
 };
