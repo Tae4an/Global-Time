@@ -42,8 +42,9 @@ public class User extends BaseTimeEntity {
     @Column(nullable = false)
     private String nationality; // 국적 필드 추가
 
+    @Lob
     @Column(nullable = true)
-    private String studentCardUrl; // 학생증 이미지 URL 추가
+    private byte[] studentCard; // 학생증 이미지 Blob 데이터 추가
 
     @Column(nullable = false)
     private boolean verified; // 인증 여부 필드 추가
@@ -62,11 +63,10 @@ public class User extends BaseTimeEntity {
         this.department = department;
     }
 
-    /* 학생증 URL 설정 */
-    public void setStudentCardUrl(String studentCardUrl) {
-        this.studentCardUrl = studentCardUrl;
+    /* 학생증 데이터 설정 */
+    public void setStudentCard(byte[] studentCard) {
+        this.studentCard = studentCard;
     }
-
     /* 인증 여부 설정 */
     public void setVerified(boolean verified) {
         this.verified = verified;
