@@ -26,10 +26,10 @@ public class UserService {
 
     @Transactional
     public void userJoin(UserDto.Request dto, MultipartFile studentCardFile) throws IOException {
-        String studentCardUrl = saveStudentCard(studentCardFile);
+        byte[] studentCardData = studentCardFile.getBytes(); // 파일 데이터를 바이트 배열로 변환
         dto.setPassword(encoder.encode(dto.getPassword()));
         User user = dto.toEntity();
-        user.setStudentCardUrl(studentCardUrl);
+        user.setStudentCard(studentCardData); // 바이트 배열 데이터를 설정
         user.setVerified(false); // 초기값은 인증되지 않음으로 설정
         userRepository.save(user);
     }
