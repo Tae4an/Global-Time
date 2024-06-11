@@ -73,4 +73,14 @@ public class CustomUserDetails implements UserDetails {
     public String getNickname() {
         return user.getNickname();
     }
+    public String getRealName() {
+        return user.getRealName();
+    }
+
+    public String getRole() {
+        return user.getRole().name();
+    }
+    public boolean isVerified() {
+        return user.isVerified();
+    }
 }
