@@ -7,6 +7,7 @@ import lombok.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import java.io.Serializable;
+import java.util.Base64;
 
 /**
  * request, response DTO 클래스를 하나로 묶어 InnerStaticClass로 한 번에 관리
@@ -51,6 +52,8 @@ public class UserDto {
         @NotBlank(message = "국적은 필수 입력 값입니다.")
         private String nationality;
 
+
+        private byte[] studentCard; // 학생증 Blob 데이터 추가
         private Role role;
 
         /* DTO -> Entity */
@@ -58,14 +61,15 @@ public class UserDto {
             User user = User.builder()
                     .id(id)
                     .username(username)
-                    .realName(realName)  // 실명 추가
-                    .department(department)  // 학과 추가
+                    .realName(realName)
+                    .department(department)
                     .password(password)
                     .nickname(nickname)
                     .email(email)
                     .university(university)
                     .nationality(nationality)
                     .role(role.USER)
+                    .studentCard(studentCard)
                     .build();
             return user;
         }
@@ -91,19 +95,22 @@ public class UserDto {
         private final String nationality;
         private final Role role;
         private final String modifiedDate;
+        private final String studentCard;
+
 
         /* Entity -> dto */
         public Response(User user) {
             this.id = user.getId();
             this.username = user.getUsername();
-            this.realName = user.getRealName();  // 실명 추가
-            this.department = user.getDepartment();  // 학과 추가
+            this.realName = user.getRealName();
+            this.department = user.getDepartment();
             this.nickname = user.getNickname();
             this.email = user.getEmail();
             this.university = user.getUniversity();
             this.nationality = user.getNationality();
             this.role = user.getRole();
             this.modifiedDate = user.getModifiedDate();
+            this.studentCard = user.getStudentCard() != null ? Base64.getEncoder().encodeToString(user.getStudentCard()) : null;
         }
     }
 }
