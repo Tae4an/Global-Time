@@ -1,0 +1,44 @@
+#posts_list {
+    position: relative;
+    min-height: 100vh; /* 화면의 전체 높이를 차지하도록 수정 */
+    width: 100%;
+    max-width: 1100px;
+    margin: 0 auto 20px auto;
+    padding: 20px; /* 내부 여백 추가 */
+    background-color: #ffffff; /* 배경색을 흰색으로 설정 */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* 그림자 추가 */
+}
+
+#posts_list h2 {
+    font-size: 2em; /* 게시물 목록 제목의 글자 크기 */
+    color: #333333; /* 글자 색상 변경 */
+}
+
+.post-card {
+    border: 1px solid #dbdbdb;
+    border-radius: 8px;
+    overflow: hidden;
+    width: 300px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px; /* 각 게시물 카드 사이의 여백 추가 */
+}
+
+.post-card img {
+    width: 100%;
+    height: auto;
+}
+
+.post-card-content {
+    padding: 16px;
+}
+
+.post-card-title {
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+.post-card-description {
+    font-size: 14px;
+    color: #555;
+}
