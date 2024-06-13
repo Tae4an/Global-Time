@@ -4,6 +4,7 @@ import axios from 'axios';
 const PostList = () => {
     const [posts, setPosts] = useState([]);
     const [error, setError] = useState(null);
+    const [loading, setLoading] = useState(true);
 
     const fetchPosts = async () => {
         try {
@@ -16,6 +17,8 @@ const PostList = () => {
         } catch (error) {
             setError(error);
             console.error("There was an error fetching the posts!", error);
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -28,6 +31,10 @@ const PostList = () => {
 
     if (error) {
         return <div>There was an error fetching the posts: {error.message}</div>;
+    }
+
+    if (loading) {
+        return <div>Loading......</div>;
     }
 
     return (
