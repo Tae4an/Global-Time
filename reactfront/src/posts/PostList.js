@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import './PostList.css';
 
 const PostList = () => {
     const [posts, setPosts] = useState([]);
@@ -38,13 +39,20 @@ const PostList = () => {
     }
 
     return (
-        <div>
-            <h1>Post List</h1>
-            <ul>
-                {posts.map(post => (
-                    <li key={post.id}>{post.title}</li>
-                ))}
-            </ul>
+        <div className="post-list">
+            {posts.map(post => (
+                <div className="post-card" key={post.id}>
+                    {post.imageUrl ? (
+                        <img src={post.imageUrl} alt={post.title} />
+                    ) : (
+                        <div className="no-image"></div>
+                    )}
+                    <div className="post-card-content">
+                        <div className="post-card-title">{post.title}</div>
+                        <div className="post-card-description">{post.description}</div>
+                    </div>
+                </div>
+            ))}
         </div>
     );
 };
