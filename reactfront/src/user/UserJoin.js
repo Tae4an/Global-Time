@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import './UserJoin.css';
+import '../css/UserJoin.css';
 
 const UserJoin = () => {
     const [username, setUsername] = useState('');
