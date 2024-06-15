@@ -23,9 +23,14 @@ public class PostsService {
     /* CREATE */
     @Transactional
     public Long save(PostsDto.Request dto, String nickname) {
-        dto.setWriter(nickname); // writer를 nickname으로 설정
-        Posts post = dto.toEntity();
-        return postsRepository.save(post).getId();
+        /* User 정보를 가져와 dto에 담아준다. */
+        User user = userRepository.findByNickname(nickname);
+        dto.setUser(user);
+        log.info("PostsService save() 실행");
+        Posts posts = dto.toEntity();
+        postsRepository.save(posts);
+
+        return posts.getId();
     }
 
     /* READ */

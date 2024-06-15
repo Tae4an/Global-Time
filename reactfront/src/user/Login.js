@@ -1,3 +1,4 @@
+// Login.js
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useUser } from '../context/UserContext';
@@ -6,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 const Login = ({ error }) => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    const { setUser } = useUser();
+    const { setUser, setToken } = useUser();
     const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
@@ -25,9 +26,15 @@ const Login = ({ error }) => {
                 alert(`로그인 실패: ${response.data.message}`);
             } else {
                 alert('로그인 성공');
-                console.log('로그인 응답:', response.data.user); // 로그로 응답 확인
-                setUser(response.data.user); // 로그인 상태 업데이트
-                navigate("/posts")
+                console.log('로그인 응답:', response.data.user);
+                setUser(response.data.user);
+                setToken(response.data.token);
+
+                // 로컬 스토리지에 사용자 정보와 토큰 저장
+                localStorage.setItem('user', JSON.stringify(response.data.user));
+                localStorage.setItem('token', response.data.token);
+
+                navigate("/posts");
             }
         } catch (error) {
             if (error.response) {

@@ -1,52 +1,61 @@
 import React, { useState } from 'react';
+import axios from 'axios';
+import { useUser } from '../context/UserContext';
+import '../css/CommentForm.css';
+import {useNavigate} from "react-router-dom";
 
-const CommentForm = ({ posts, user }) => {
+const CommentForm = ({ postId }) => {
     const [comment, setComment] = useState('');
+    const { user, token } = useUser(); // 인증 토큰도 가져옵니다.
+    const navigate = useNavigate();
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        if (!user || !user.nickname) {
+            alert('로그인이 필요합니다.');
+            return;
+        }
 
-    const handleChange = (e) => {
-        setComment(e.target.value);
-    };
+        const commentData = {
+            comment,
+            user: {
+                nickname: user.nickname
+            },
+            posts: {
+                id: postId
+            }
+        };
 
-    const handleSave = () => {
-        // 여기에 댓글 저장 로직 추가
-        console.log(`Saving comment for post ID ${posts.id}: ${comment}`);
+        try {
+            await axios.post(`/api/posts/${postId}/comments`, commentData, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}` // 인증 토큰을 헤더에 포함합니다.
+                },
+                withCredentials: true // CORS 문제 해결을 위해 자격 증명 포함
+            });
+            alert('댓글이 등록되었습니다.');
+            setComment('');
+            navigate(0); // 현재 게시글을 다시 불러오기 위해 navigate 호출
+        } catch (error) {
+            console.error('There was an error submitting the comment!', error);
+            alert(`댓글 작성 중 오류가 발생했습니다: ${error.response?.data?.message || error.message}`);
+        }
     };
 
     return (
-        <div className="card">
-            <div className="card-header bi bi-chat-right-dots">Write a Comment</div>
-            <form>
-                <input type="hidden" id="postsId" value={posts.id} />
-                {user ? (
-                    <>
-                        <div className="card-body">
-              <textarea
-                  id="comment"
-                  className="form-control"
-                  rows="4"
-                  placeholder="댓글을 입력하세요"
-                  value={comment}
-                  onChange={handleChange}
-              />
-                        </div>
-                        <div className="card-footer">
-                            <button
-                                type="button"
-                                id="btn-comment-save"
-                                className="btn btn-outline-primary bi bi-pencil-square"
-                                onClick={handleSave}
-                            >
-                                등록
-                            </button>
-                        </div>
-                    </>
-                ) : (
-                    <div className="card-body" style={{ fontSize: 'small' }}>
-                        <a href="/auth/login">로그인</a>을 하시면 댓글을 등록할 수 있습니다.
-                    </div>
-                )}
-            </form>
-        </div>
+        <form onSubmit={handleSubmit} className="comment-form">
+            <div className="form-group">
+                <label htmlFor="comment">댓글</label>
+                <textarea
+                    className="form-control"
+                    id="comment"
+                    rows="3"
+                    value={comment}
+                    onChange={(e) => setComment(e.target.value)}
+                ></textarea>
+            </div>
+            <button type="submit" className="btn btn-primary">댓글 작성</button>
+        </form>
     );
 };
 

@@ -7,7 +7,7 @@ import './PostCreate.css'
 const PostCreate = () => {
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
-    const { user } = useUser(); // 로그인한 사용자의 정보를 가져옴
+    const { user } = useUser();
     const navigate = useNavigate();
 
     const handleSave = async () => {
@@ -19,7 +19,7 @@ const PostCreate = () => {
         const postData = {
             title,
             content,
-            writer: user.username // writer를 user.username으로 설정
+            writer: user.nickname,
         };
 
         try {
@@ -28,7 +28,8 @@ const PostCreate = () => {
                     'Content-Type': 'application/json'
                 }
             });
-            navigate('/posts/list');
+            alert("게시글이 등록 됐습니다.");
+            navigate('/posts');
         } catch (error) {
             console.error('There was an error creating the post!', error);
             alert(`글 작성 중 오류가 발생했습니다: ${error.response?.data?.message || error.message}`);
@@ -62,7 +63,7 @@ const PostCreate = () => {
                 </div>
             </form>
             <button type="button" onClick={handleSave} className="btn btn-primary bi bi-pencil-fill"> 작성</button>
-            <a href="/posts/list" role="button" className="btn btn-info bi bi-arrow-return-left"> 목록</a>
+            <a href="/posts" role="button" className="btn btn-info bi bi-arrow-return-left"> 목록</a>
         </div>
     );
 };

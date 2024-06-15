@@ -83,4 +83,8 @@ public class CustomUserDetails implements UserDetails {
     public boolean isVerified() {
         return user.isVerified();
     }
+
+    public User getUser() {
+        return user;
+    }
 }
