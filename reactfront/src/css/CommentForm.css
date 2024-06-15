@@ -1,0 +1,11 @@
+.comment-form {
+    margin-top: 20px;
+}
+
+.comment-form .form-group {
+    margin-bottom: 15px;
+}
+
+.comment-form textarea {
+    resize: none;
+}
