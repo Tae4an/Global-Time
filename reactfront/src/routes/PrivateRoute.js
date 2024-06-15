@@ -7,6 +7,7 @@ const PrivateRoute = ({ children, roles }) => {
 
     if (!user) {
         // 사용자가 로그인하지 않은 경우 로그인 페이지로 리다이렉트
+        alert("로그인 후 이용 가능합니다.")
         return <Navigate to="/auth/login" />;
     }
     if (!user.verified) {
