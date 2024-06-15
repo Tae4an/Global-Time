@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import '../css/UserJoin.css';
@@ -12,17 +12,42 @@ const UserJoin = () => {
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const [realName, setRealName] = useState('');
     const [department, setDepartment] = useState('');
+    const [departments, setDepartments] = useState([]);
     const [nickname, setNickname] = useState('');
     const [isNicknameAvailable, setIsNicknameAvailable] = useState(null);
     const [email, setEmail] = useState('');
     const [university, setUniversity] = useState('');
     const [universities, setUniversities] = useState([]);
     const [universitySelected, setUniversitySelected] = useState(false);
-    const [nationality, setNationality] = useState('Korean');
+    const [nationality, setNationality] = useState('');
+    const [nationalities, setNationalities] = useState([]);
     const [studentCard, setStudentCard] = useState(null);
     const [currentStep, setCurrentStep] = useState(1);
     const [errors, setErrors] = useState({});
     const navigate = useNavigate();
+
+    useEffect(() => {
+        const fetchNationalities = async () => {
+            try {
+                const response = await axios.get('/api/nationalities');
+                setNationalities(response.data);
+            } catch (error) {
+                console.error('Error fetching nationalities:', error);
+            }
+        };
+
+        const fetchDepartments = async () => {
+            try {
+                const response = await axios.get('/api/departments');
+                setDepartments(response.data);
+            } catch (error) {
+                console.error('Error fetching departments:', error);
+            }
+        };
+
+        fetchNationalities();
+        fetchDepartments();
+    }, []);
 
     const handleSearchUniversities = async (e) => {
         const query = e.target.value;
@@ -50,7 +75,7 @@ const UserJoin = () => {
         const newErrors = {};
         if (currentStep === 1) {
             if (!universitySelected) newErrors.university = '대학교를 선택해주세요.';
-            if (!department) newErrors.department = '학과를 입력해주세요.';
+            if (!department) newErrors.department = '학과를 선택해주세요.';
         } else if (currentStep === 2) {
             if (!username) newErrors.username = '아이디를 입력해주세요.';
             if (!password) newErrors.password = '비밀번호를 입력해주세요.';
@@ -61,6 +86,7 @@ const UserJoin = () => {
             if (!email) newErrors.email = '이메일을 입력해주세요.';
             if (!validateEmail(email)) newErrors.email = '올바른 이메일 형식을 입력해주세요.';
             if (!studentCard) newErrors.studentCard = '학생증을 업로드해주세요.';
+            if (!nationality) newErrors.nationality = '국적을 선택해주세요.';
         }
         setErrors(newErrors);
         if (Object.keys(newErrors).length > 0) {
@@ -227,14 +253,19 @@ const UserJoin = () => {
                             </div>
                             <div className="form-group">
                                 <label>학과</label>
-                                <input
-                                    type="text"
+                                <select
                                     name="department"
                                     value={department}
                                     onChange={(e) => handleInputChange(e, setDepartment, 'department')}
-                                    className={`form-control ${errors.department && 'is-invalid'}`}
-                                    placeholder="학과를 입력해주세요"
-                                />
+                                    className="form-control"
+                                >
+                                    <option value="">학과를 선택해주세요</option>
+                                    {departments.map((dep, index) => (
+                                        <option key={index} value={dep.name}>
+                                            {dep.name}
+                                        </option>
+                                    ))}
+                                </select>
                                 {errors.department && <div className="invalid-feedback">{errors.department}</div>}
                             </div>
                             <button type="button" className="btn btn-primary" onClick={handleNextStep}>다음</button>
@@ -352,11 +383,14 @@ const UserJoin = () => {
                                     onChange={(e) => handleInputChange(e, setNationality, 'nationality')}
                                     className="form-control"
                                 >
-                                    <option value="Korean">Korean</option>
-                                    <option value="Foreigner">Foreigner</option>
-                                    <option value="American">American</option>
-                                    <option value="Canadian">Canadian</option>
+                                    <option value="">국적을 선택해주세요</option>
+                                    {nationalities.map((nat, index) => (
+                                        <option key={index} value={nat.name}>
+                                            {nat.name}
+                                        </option>
+                                    ))}
                                 </select>
+                                {errors.nationality && <div className="invalid-feedback">{errors.nationality}</div>}
                             </div>
                             <div className="form-group">
                                 <label>학생증 업로드</label>
