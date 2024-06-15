@@ -27,4 +27,22 @@ public class PostsApiController {
     public ResponseEntity<Long> save(@RequestBody PostsDto.Request dto) {
         return ResponseEntity.ok(postsService.save(dto, dto.getWriter()));
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<PostsDto.Response> findById(@PathVariable Long id) {
+        PostsDto.Response post = postsService.findById(id);
+        return ResponseEntity.ok(post);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Void> update(@PathVariable Long id, @RequestBody PostsDto.Request dto) {
+        postsService.update(id, dto);
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        postsService.delete(id);
+        return ResponseEntity.ok().build();
+    }
 }
