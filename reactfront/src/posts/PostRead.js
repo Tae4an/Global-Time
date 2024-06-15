@@ -30,7 +30,7 @@ const PostRead = ({ user }) => {
             axios.delete(`http://localhost:8080/api/posts/${id}`)
                 .then(() => {
                     alert('게시글이 삭제되었습니다.');
-                    navigate('/');
+                    navigate('/posts');
                 })
                 .catch(error => {
                     console.error('There was an error deleting the post!', error);
@@ -73,19 +73,17 @@ const PostRead = ({ user }) => {
                     </form>
 
                     {/* Buttons */}
-                    {user ? (
-                        <>
-                            <Link to="/" role="button" className="btn btn-info bi bi-arrow-return-left"> 목록</Link>
+                    <div className="d-flex justify-content-between mt-2">
+                        <Link to="/posts" role="button" className="btn btn-info bi bi-arrow-return-left"> 목록</Link>
+                        <div>
                             {isWriter && (
                                 <>
-                                    <Link to={`/posts/update/${post.id}`} role="button" className="btn btn-primary bi bi-pencil-square"> 수정</Link>
-                                    <button type="button" onClick={handleDelete} className="btn btn-danger bi bi-trash"> 삭제</button>
+                                    <Link to={`/posts/update/${post.id}`} role="button" className="btn btn-primary bi bi-pencil-square mx-1"> 수정</Link>
+                                    <button type="button" onClick={handleDelete} className="btn btn-danger bi bi-trash mx-1"> 삭제</button>
                                 </>
                             )}
-                        </>
-                    ) : (
-                        <Link to="/posts" role="button" className="btn btn-info bi bi-arrow-return-left"> 목록</Link>
-                    )}
+                        </div>
+                    </div>
 
                     {/* Comments */}
                     <Comments postId={post.id} user={user} />

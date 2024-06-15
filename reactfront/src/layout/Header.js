@@ -1,16 +1,18 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import '../App.css';
 import { useUser } from '../context/UserContext';
 
 const Header = () => {
-    const { user, setUser } = useUser();
+    const { user, logout } = useUser();
+    const navigate = useNavigate();
 
     const handleLogout = () => {
-        setUser(null); // 로그아웃 시 사용자 상태 초기화
-        window.location.href = '/auth/login'; // 로그아웃 후 로그인 페이지로 이동
+        alert("로그아웃 되었습니다.");
+        logout();
+        navigate('/');
     };
 
     if (user) {
@@ -27,21 +29,21 @@ const Header = () => {
                 </form>
             </div>
 
-            <nav id="nav">
-                <div className="text-right">
+            <nav id="nav" className="navbar navbar-expand-lg navbar-light bg-light">
+                <div className="collapse navbar-collapse justify-content-end">
                     {user ? (
                         <>
-                            {user.role === 'ADMIN' && (
-                                <Link to="/admin" className="btn btn-outline-dark">관리자 페이지</Link>
-                            )}
                             <span className="mx-3">{user.realName}님 안녕하세요!</span>
-                            <button onClick={handleLogout} className="btn btn-outline-dark">로그아웃</button>
-                            <Link to="/auth/modify" className="btn btn-outline-dark bi bi-gear"></Link>
+                            {user.role === 'ADMIN' && (
+                                <Link to="/admin" className="btn btn-outline-dark mx-1">관리자</Link>
+                            )}
+                            <button onClick={handleLogout} className="btn btn-outline-dark mx-1">로그아웃</button>
+                            <Link to="/auth/modify" className="btn btn-outline-dark bi bi-gear mx-1"></Link>
                         </>
                     ) : (
                         <>
-                            <Link to="/auth/login" role="button" className="btn btn-outline-dark bi bi-lock-fill"> 로그인</Link>
-                            <Link to="/auth/join" role="button" className="btn btn-outline-dark bi bi-person-circle"> 회원가입</Link>
+                            <Link to="/auth/login" role="button" className="btn btn-outline-dark bi bi-lock-fill mx-1"> 로그인</Link>
+                            <Link to="/auth/join" role="button" className="btn btn-outline-dark bi bi-person-circle mx-1"> 회원가입</Link>
                         </>
                     )}
                 </div>
