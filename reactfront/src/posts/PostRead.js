@@ -90,9 +90,11 @@ const PostRead = ({ user }) => {
                         <div className="card-body">
                             <label htmlFor="title">제목</label>
                             <input type="text" className="form-control" id="title" value={translatedTitle || post.title} readOnly />
+                            <button type="button" className="btn btn-secondary" onClick={() => handleTranslate(post.title, setTranslatedTitle)}>번역 보기</button>
                             <br />
                             <label htmlFor="content">내용</label>
                             <textarea rows="5" className="form-control" id="content" value={translatedContent || post.content} readOnly></textarea>
+                            <button type="button" className="btn btn-secondary" onClick={() => handleTranslate(post.content, setTranslatedContent)}>번역 보기</button>
                         </div>
                     </form>
 
@@ -108,7 +110,6 @@ const PostRead = ({ user }) => {
                         </div>
                     </div>
 
-                    <button onClick={handleTranslate} className="btn btn-secondary mt-3">번역 보기</button>
 
                     {/* Comments */}
                     <Comments postId={post.id} user={user} />
