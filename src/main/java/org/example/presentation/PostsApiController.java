@@ -1,6 +1,7 @@
 package org.example.presentation;
 
 import org.example.application.PostsService;
+import org.example.application.dto.CommentDto;
 import org.example.application.dto.PostsDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -44,5 +45,12 @@ public class PostsApiController {
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         postsService.delete(id);
         return ResponseEntity.ok().build();
+    }
+
+    // 댓글 단일 조회 엔드포인트 추가
+    @GetMapping("/{postId}/comments/{commentId}")
+    public ResponseEntity<CommentDto.Response> getComment(@PathVariable Long postId, @PathVariable Long commentId) {
+        CommentDto.Response comment = postsService.findCommentById(commentId);
+        return ResponseEntity.ok(comment);
     }
 }
