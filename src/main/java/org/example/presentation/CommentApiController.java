@@ -2,8 +2,6 @@ package org.example.presentation;
 
 import org.example.application.CommentService;
 import org.example.application.dto.CommentDto;
-import org.example.application.dto.UserDto;
-import org.example.application.security.auth.LoginUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,9 +20,8 @@ public class CommentApiController {
 
     /* CREATE */
     @PostMapping("/posts/{id}/comments")
-    public ResponseEntity<Long> save(@PathVariable Long id, @RequestBody CommentDto.Request dto,
-                               @LoginUser UserDto.Response userSessionDto) {
-        return ResponseEntity.ok(commentService.save(id, userSessionDto.getNickname(), dto));
+    public ResponseEntity<Long> save(@PathVariable Long id, @RequestBody CommentDto.Request dto) {
+        return ResponseEntity.ok(commentService.save(id, dto.getUser().getNickname(), dto));
     }
 
     /* READ */
