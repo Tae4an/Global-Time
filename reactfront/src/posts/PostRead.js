@@ -8,6 +8,8 @@ const PostRead = ({ user }) => {
     const { id } = useParams();
     const [post, setPost] = useState(null);
     const [error, setError] = useState(null);
+    const [translatedTitle, setTranslatedTitle] = useState('');
+    const [translatedContent, setTranslatedContent] = useState('');
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -23,6 +25,28 @@ const PostRead = ({ user }) => {
 
         fetchPost();
     }, [id]);
+
+    const handleTranslate = async () => {
+        const targetLanguage = user.nationality === 'Korea' ? 'en' : 'ko';  // 사용자의 국적에 따라 언어 설정
+        console.log(`Translating post to: ${targetLanguage}`);
+
+        try {
+            const titleResponse = await axios.post('http://127.0.0.1:5000/translate', {
+                text: post.title,
+                target_language: targetLanguage
+            });
+            const contentResponse = await axios.post('http://127.0.0.1:5000/translate', {
+                text: post.content,
+                target_language: targetLanguage
+            });
+            console.log(`Translated title: ${titleResponse.data.translated_text}`);
+            console.log(`Translated content: ${contentResponse.data.translated_text}`);
+            setTranslatedTitle(titleResponse.data.translated_text);
+            setTranslatedContent(contentResponse.data.translated_text);
+        } catch (error) {
+            console.error('Translation error:', error);
+        }
+    };
 
     const handleDelete = () => {
         const confirmDelete = window.confirm('정말 삭제하시겠습니까?');
@@ -65,14 +89,13 @@ const PostRead = ({ user }) => {
                         </div>
                         <div className="card-body">
                             <label htmlFor="title">제목</label>
-                            <input type="text" className="form-control" id="title" value={post.title} readOnly />
+                            <input type="text" className="form-control" id="title" value={translatedTitle || post.title} readOnly />
                             <br />
                             <label htmlFor="content">내용</label>
-                            <textarea rows="5" className="form-control" id="content" defaultValue={post.content} readOnly></textarea>
+                            <textarea rows="5" className="form-control" id="content" value={translatedContent || post.content} readOnly></textarea>
                         </div>
                     </form>
 
-                    {/* Buttons */}
                     <div className="d-flex justify-content-between mt-2">
                         <Link to="/posts" role="button" className="btn btn-info bi bi-arrow-return-left"> 목록</Link>
                         <div>
@@ -84,6 +107,8 @@ const PostRead = ({ user }) => {
                             )}
                         </div>
                     </div>
+
+                    <button onClick={handleTranslate} className="btn btn-secondary mt-3">번역 보기</button>
 
                     {/* Comments */}
                     <Comments postId={post.id} user={user} />
