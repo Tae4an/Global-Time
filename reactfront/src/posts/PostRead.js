@@ -8,6 +8,8 @@ const PostRead = ({ user }) => {
     const { id } = useParams();
     const [post, setPost] = useState(null);
     const [error, setError] = useState(null);
+    const [translatedTitle, setTranslatedTitle] = useState('');
+    const [translatedContent, setTranslatedContent] = useState('');
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -24,13 +26,35 @@ const PostRead = ({ user }) => {
         fetchPost();
     }, [id]);
 
+    const handleTranslate = async () => {
+        const targetLanguage = user.nationality === 'Korea' ? 'en' : 'ko';  // 사용자의 국적에 따라 언어 설정
+        console.log(`Translating post to: ${targetLanguage}`);
+
+        try {
+            const titleResponse = await axios.post('http://127.0.0.1:5000/translate', {
+                text: post.title,
+                target_language: targetLanguage
+            });
+            const contentResponse = await axios.post('http://127.0.0.1:5000/translate', {
+                text: post.content,
+                target_language: targetLanguage
+            });
+            console.log(`Translated title: ${titleResponse.data.translated_text}`);
+            console.log(`Translated content: ${contentResponse.data.translated_text}`);
+            setTranslatedTitle(titleResponse.data.translated_text);
+            setTranslatedContent(contentResponse.data.translated_text);
+        } catch (error) {
+            console.error('Translation error:', error);
+        }
+    };
+
     const handleDelete = () => {
         const confirmDelete = window.confirm('정말 삭제하시겠습니까?');
         if (confirmDelete) {
             axios.delete(`http://localhost:8080/api/posts/${id}`)
                 .then(() => {
                     alert('게시글이 삭제되었습니다.');
-                    navigate('/');
+                    navigate('/posts');
                 })
                 .catch(error => {
                     console.error('There was an error deleting the post!', error);
@@ -65,27 +89,27 @@ const PostRead = ({ user }) => {
                         </div>
                         <div className="card-body">
                             <label htmlFor="title">제목</label>
-                            <input type="text" className="form-control" id="title" value={post.title} readOnly />
+                            <input type="text" className="form-control" id="title" value={translatedTitle || post.title} readOnly />
+                            <button type="button" className="btn btn-secondary" onClick={() => handleTranslate(post.title, setTranslatedTitle)}>번역 보기</button>
                             <br />
                             <label htmlFor="content">내용</label>
-                            <textarea rows="5" className="form-control" id="content" defaultValue={post.content} readOnly></textarea>
+                            <textarea rows="5" className="form-control" id="content" value={translatedContent || post.content} readOnly></textarea>
+                            <button type="button" className="btn btn-secondary" onClick={() => handleTranslate(post.content, setTranslatedContent)}>번역 보기</button>
                         </div>
                     </form>
 
-                    {/* Buttons */}
-                    {user ? (
-                        <>
-                            <Link to="/" role="button" className="btn btn-info bi bi-arrow-return-left"> 목록</Link>
+                    <div className="d-flex justify-content-between mt-2">
+                        <Link to="/posts" role="button" className="btn btn-info bi bi-arrow-return-left"> 목록</Link>
+                        <div>
                             {isWriter && (
                                 <>
-                                    <Link to={`/posts/update/${post.id}`} role="button" className="btn btn-primary bi bi-pencil-square"> 수정</Link>
-                                    <button type="button" onClick={handleDelete} className="btn btn-danger bi bi-trash"> 삭제</button>
+                                    <Link to={`/posts/update/${post.id}`} role="button" className="btn btn-primary bi bi-pencil-square mx-1"> 수정</Link>
+                                    <button type="button" onClick={handleDelete} className="btn btn-danger bi bi-trash mx-1"> 삭제</button>
                                 </>
                             )}
-                        </>
-                    ) : (
-                        <Link to="/posts" role="button" className="btn btn-info bi bi-arrow-return-left"> 목록</Link>
-                    )}
+                        </div>
+                    </div>
+
 
                     {/* Comments */}
                     <Comments postId={post.id} user={user} />

@@ -4,12 +4,12 @@ import '../css/Comment.css';
 
 const Comments = ({ postId, user }) => {
     const [comments, setComments] = useState([]);
+    const [translatedComments, setTranslatedComments] = useState({});
 
     useEffect(() => {
         const fetchComments = async () => {
             try {
                 const response = await axios.get(`/api/posts/${postId}/comments`);
-                console.log(response.data); // 댓글 데이터를 콘솔에 출력
                 setComments(response.data);
             } catch (error) {
                 console.error('There was an error fetching the comments!', error);
@@ -18,6 +18,24 @@ const Comments = ({ postId, user }) => {
 
         fetchComments();
     }, [postId]);
+
+    const handleTranslate = async (commentId, commentText) => {
+        const targetLanguage = user.nationality === 'Korea' ? 'en' : 'ko';  // 사용자의 국적에 따라 언어 설정
+        console.log(`Translating comment to: ${targetLanguage}`);
+        try {
+            const response = await axios.post('http://127.0.0.1:5000/translate', {
+                text: commentText,
+                target_language: targetLanguage
+            });
+            console.log(`Translated comment: ${response.data.translated_text}`);
+            setTranslatedComments(prevState => ({
+                ...prevState,
+                [commentId]: response.data.translated_text
+            }));
+        } catch (error) {
+            console.error('Translation error:', error);
+        }
+    };
 
     const handleDelete = async (commentId) => {
         try {
@@ -37,8 +55,9 @@ const Comments = ({ postId, user }) => {
                         <span className="comment-date">{comment.createdDate}</span>
                     </div>
                     <div className="comment-body">
-                        <p>{comment.comment}</p>
+                        <p>{translatedComments[comment.id] || comment.comment}</p>
                     </div>
+                    <button onClick={() => handleTranslate(comment.id, comment.comment)} className="btn btn-secondary btn-sm">번역 보기</button>
                     {user && user.nickname === comment.nickname && (
                         <div className="comment-actions">
                             <button onClick={() => handleDelete(comment.id)} className="btn btn-danger btn-sm">삭제</button>

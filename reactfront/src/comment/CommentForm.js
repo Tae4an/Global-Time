@@ -2,12 +2,13 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { useUser } from '../context/UserContext';
 import '../css/CommentForm.css';
-import {useNavigate} from "react-router-dom";
+import { useNavigate } from 'react-router-dom';
 
 const CommentForm = ({ postId }) => {
     const [comment, setComment] = useState('');
     const { user, token } = useUser(); // 인증 토큰도 가져옵니다.
     const navigate = useNavigate();
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (!user || !user.nickname) {
@@ -54,7 +55,9 @@ const CommentForm = ({ postId }) => {
                     onChange={(e) => setComment(e.target.value)}
                 ></textarea>
             </div>
-            <button type="submit" className="btn btn-primary">댓글 작성</button>
+            <div className="d-flex justify-content-end">
+                <button type="submit" className="btn btn-primary">댓글 작성</button>
+            </div>
         </form>
     );
 };
