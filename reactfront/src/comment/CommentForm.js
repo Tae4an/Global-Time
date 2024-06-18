@@ -2,12 +2,10 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { useUser } from '../context/UserContext';
 import '../css/CommentForm.css';
-import { useNavigate } from 'react-router-dom';
 
-const CommentForm = ({ postId }) => {
+const CommentForm = ({ postId, onCommentSubmit }) => {
     const [comment, setComment] = useState('');
     const { user, token } = useUser(); // 인증 토큰도 가져옵니다.
-    const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -27,16 +25,18 @@ const CommentForm = ({ postId }) => {
         };
 
         try {
-            await axios.post(`/api/posts/${postId}/comments`, commentData, {
+            const response = await axios.post(`/api/posts/${postId}/comments`, commentData, {
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}` // 인증 토큰을 헤더에 포함합니다.
                 },
                 withCredentials: true // CORS 문제 해결을 위해 자격 증명 포함
             });
+            const newComment = response.data; // 서버로부터 새 댓글 객체를 받아옴
+            console.log(response.data);
             alert('댓글이 등록되었습니다.');
             setComment('');
-            navigate(0); // 현재 게시글을 다시 불러오기 위해 navigate 호출
+            onCommentSubmit(newComment); // 새 댓글 객체를 상위 컴포넌트로 전달
         } catch (error) {
             console.error('There was an error submitting the comment!', error);
             alert(`댓글 작성 중 오류가 발생했습니다: ${error.response?.data?.message || error.message}`);
@@ -58,6 +58,8 @@ const CommentForm = ({ postId }) => {
             <div className="d-flex justify-content-end">
                 <button type="submit" className="btn btn-primary">댓글 작성</button>
             </div>
+            <br/>
+            <br/>
         </form>
     );
 };
