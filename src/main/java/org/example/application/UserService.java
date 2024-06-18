@@ -82,4 +82,8 @@ public class UserService {
         List<User> users = userRepository.findAllByVerifiedFalse();
         return users.stream().map(UserDto.Response::new).collect(Collectors.toList());
     }
+
+    public User getUserById(Long id) {
+        return userRepository.findById(id).orElse(null);
+    }
 }
