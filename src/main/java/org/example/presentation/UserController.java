@@ -4,6 +4,7 @@ import org.example.application.UserService;
 import lombok.RequiredArgsConstructor;
 import org.example.application.dto.UserDto;
 import org.example.application.validator.CustomValidators;
+import org.example.domain.User;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.Errors;
@@ -65,5 +66,14 @@ public class UserController {
     public ResponseEntity<?> verifyStudent(@RequestParam Long userId) {
         userService.verifyStudent(userId);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/users/{id}")
+    public ResponseEntity<User> getUserById(@PathVariable Long id) {
+        User user = userService.getUserById(id);
+        if (user == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(user);
     }
 }
