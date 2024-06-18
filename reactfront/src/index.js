@@ -1,15 +1,11 @@
 import React from 'react';
-import ReactDOM from 'react-dom/client';
+import ReactDOM from 'react-dom';
 import App from './App';
-import reportWebVitals from './reportWebVitals';
+import ErrorBoundary from './error/ErrorBoundary';
 
-const container = document.getElementById('root');
-const root = ReactDOM.createRoot(container);
-
-root.render(
-    <React.StrictMode>
+ReactDOM.render(
+    <ErrorBoundary>
         <App />
-    </React.StrictMode>
+    </ErrorBoundary>,
+    document.getElementById('root')
 );
-
-reportWebVitals();
