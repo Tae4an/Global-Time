@@ -6,6 +6,7 @@ import CommentForm from './CommentForm';
 const Comments = ({ postId, userId }) => {
     const [comments, setComments] = useState([]);
     const [translatedComments, setTranslatedComments] = useState({});
+    const [showOriginalComments, setShowOriginalComments] = useState({});
     const [user, setUser] = useState(null);
 
     // 번역을 위한 국가별 언어 코드 매핑
@@ -239,20 +240,32 @@ const Comments = ({ postId, userId }) => {
             console.error('User data not loaded');
             return;
         }
-        const targetLanguage = nationalityToLanguage[user.nationality] || 'ko';
-        console.log(`Translating comment to: ${targetLanguage}`);
-        try {
-            const response = await axios.post('http://127.0.0.1:5000/translate', {
-                text: commentText,
-                target_language: targetLanguage
-            });
-            console.log(`Translated comment: ${response.data.translated_text}`);
-            setTranslatedComments(prevState => ({
+
+        if (showOriginalComments[commentId]) {
+            setShowOriginalComments(prevState => ({
                 ...prevState,
-                [commentId]: response.data.translated_text
+                [commentId]: false
             }));
-        } catch (error) {
-            console.error('Translation error:', error);
+        } else {
+            const targetLanguage = nationalityToLanguage[user.nationality] || 'ko';
+            console.log(`Translating comment to: ${targetLanguage}`);
+            try {
+                const response = await axios.post('http://127.0.0.1:5000/translate', {
+                    text: commentText,
+                    target_language: targetLanguage
+                });
+                console.log(`Translated comment: ${response.data.translated_text}`);
+                setTranslatedComments(prevState => ({
+                    ...prevState,
+                    [commentId]: response.data.translated_text
+                }));
+                setShowOriginalComments(prevState => ({
+                    ...prevState,
+                    [commentId]: true
+                }));
+            } catch (error) {
+                console.error('Translation error:', error);
+            }
         }
     };
 
@@ -288,9 +301,11 @@ const Comments = ({ postId, userId }) => {
                         <span className="comment-date">{comment.createdDate}</span>
                     </div>
                     <div className="comment-body">
-                        <p>{translatedComments[comment.id] || comment.comment}</p>
+                        <p>{showOriginalComments[comment.id] ? translatedComments[comment.id] : comment.comment}</p>
                     </div>
-                    <button onClick={() => handleTranslate(comment.id, comment.comment)} className="btn btn-secondary btn-sm">번역 보기</button>
+                    <button onClick={() => handleTranslate(comment.id, comment.comment)} className="btn btn-secondary btn-sm">
+                        {showOriginalComments[comment.id] ? '원본 보기' : '번역 보기'}
+                    </button>
                     {user && user.nickname === comment.nickname && (
                         <div className="comment-actions">
                             <button onClick={() => handleDelete(comment.id)} className="btn btn-danger btn-sm">삭제</button>

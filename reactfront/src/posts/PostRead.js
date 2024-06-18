@@ -9,6 +9,8 @@ const PostRead = ({ user }) => {
     const [error, setError] = useState(null);
     const [translatedTitle, setTranslatedTitle] = useState('');
     const [translatedContent, setTranslatedContent] = useState('');
+    const [showOriginalTitle, setShowOriginalTitle] = useState(true);
+    const [showOriginalContent, setShowOriginalContent] = useState(true);
     const navigate = useNavigate();
 
     // 번역을 위한 국가별 언어 코드 매핑
@@ -225,35 +227,45 @@ const PostRead = ({ user }) => {
 
     const handleTranslateTitle = async (e) => {
         e.preventDefault();  // 버튼 새로고침 기본 동작 막기
-        const targetLanguage = nationalityToLanguage[user.user.nationality] || 'ko';  // 사용자의 국적에 따라 언어 설정
-        console.log(`Translating title to: ${targetLanguage}`);
+        if (showOriginalTitle) {
+            const targetLanguage = nationalityToLanguage[user.user.nationality] || 'ko';  // 사용자의 국적에 따라 언어 설정
+            console.log(`Translating title to: ${targetLanguage}`);
 
-        try {
-            const response = await axios.post('http://127.0.0.1:5000/translate', {
-                text: post.title,
-                target_language: targetLanguage
-            });
-            console.log(`Translated title: ${response.data.translated_text}`);
-            setTranslatedTitle(response.data.translated_text);
-        } catch (error) {
-            console.error('Translation error:', error);
+            try {
+                const response = await axios.post('http://127.0.0.1:5000/translate', {
+                    text: post.title,
+                    target_language: targetLanguage
+                });
+                console.log(`Translated title: ${response.data.translated_text}`);
+                setTranslatedTitle(response.data.translated_text);
+                setShowOriginalTitle(false);
+            } catch (error) {
+                console.error('Translation error:', error);
+            }
+        } else {
+            setShowOriginalTitle(true);
         }
     };
 
     const handleTranslateContent = async (e) => {
         e.preventDefault();  // 버튼 새로고침 기본 동작 막기
-        const targetLanguage = nationalityToLanguage[user.user.nationality] || 'ko';  // 사용자의 국적에 따라 언어 설정
-        console.log(`Translating content to: ${targetLanguage}`);
+        if (showOriginalContent) {
+            const targetLanguage = nationalityToLanguage[user.user.nationality] || 'ko';  // 사용자의 국적에 따라 언어 설정
+            console.log(`Translating content to: ${targetLanguage}`);
 
-        try {
-            const response = await axios.post('http://127.0.0.1:5000/translate', {
-                text: post.content,
-                target_language: targetLanguage
-            });
-            console.log(`Translated content: ${response.data.translated_text}`);
-            setTranslatedContent(response.data.translated_text);
-        } catch (error) {
-            console.error('Translation error:', error);
+            try {
+                const response = await axios.post('http://127.0.0.1:5000/translate', {
+                    text: post.content,
+                    target_language: targetLanguage
+                });
+                console.log(`Translated content: ${response.data.translated_text}`);
+                setTranslatedContent(response.data.translated_text);
+                setShowOriginalContent(false);
+            } catch (error) {
+                console.error('Translation error:', error);
+            }
+        } else {
+            setShowOriginalContent(true);
         }
     };
 
@@ -298,12 +310,28 @@ const PostRead = ({ user }) => {
                         </div>
                         <div className="card-body">
                             <label htmlFor="title">제목</label>
-                            <input type="text" className="form-control" id="title" value={translatedTitle || post.title} readOnly />
-                            <button onClick={handleTranslateTitle} className="btn btn-secondary mt-1">번역 보기</button>
+                            <input
+                                type="text"
+                                className="form-control"
+                                id="title"
+                                value={showOriginalTitle ? post.title : translatedTitle}
+                                readOnly
+                            />
+                            <button onClick={handleTranslateTitle} className="btn btn-secondary mt-1">
+                                {showOriginalTitle ? '번역 보기' : '원본 보기'}
+                            </button>
                             <br />
                             <label htmlFor="content">내용</label>
-                            <textarea rows="5" className="form-control" id="content" value={translatedContent || post.content} readOnly></textarea>
-                            <button onClick={handleTranslateContent} className="btn btn-secondary mt-1">번역 보기</button>
+                            <textarea
+                                rows="5"
+                                className="form-control"
+                                id="content"
+                                value={showOriginalContent ? post.content : translatedContent}
+                                readOnly
+                            ></textarea>
+                            <button onClick={handleTranslateContent} className="btn btn-secondary mt-1">
+                                {showOriginalContent ? '번역 보기' : '원본 보기'}
+                            </button>
                         </div>
                     </form>
 
