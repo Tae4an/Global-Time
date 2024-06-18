@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import Comments from '../comment/Comments';
-import CommentForm from '../comment/CommentForm';
 
 const PostRead = ({ user }) => {
     const { id } = useParams();
@@ -11,6 +10,204 @@ const PostRead = ({ user }) => {
     const [translatedTitle, setTranslatedTitle] = useState('');
     const [translatedContent, setTranslatedContent] = useState('');
     const navigate = useNavigate();
+
+    // 번역을 위한 국가별 언어 코드 매핑
+    const nationalityToLanguage = {
+        Afghanistan: 'fa',
+        Albania: 'sq',
+        Algeria: 'ar',
+        Andorra: 'ca',
+        Angola: 'pt',
+        AntiguaandBarbuda: 'en',
+        Argentina: 'es',
+        Armenia: 'hy',
+        Australia: 'en',
+        Austria: 'de',
+        Azerbaijan: 'az',
+        Bahamas: 'en',
+        Bahrain: 'ar',
+        Bangladesh: 'bn',
+        Barbados: 'en',
+        Belarus: 'be',
+        Belgium: 'nl',
+        Belize: 'en',
+        Benin: 'fr',
+        Bhutan: 'dz',
+        Bolivia: 'es',
+        BosniaandHerzegovina: 'bs',
+        Botswana: 'en',
+        Brazil: 'pt',
+        BruneiDarussalam: 'ms',
+        Bulgaria: 'bg',
+        BurkinaFaso: 'fr',
+        Burundi: 'fr',
+        CaboVerde: 'pt',
+        Cambodia: 'km',
+        Cameroon: 'fr',
+        Canada: 'en',
+        CentralAfricanRepublic: 'fr',
+        Chad: 'fr',
+        Chile: 'es',
+        China: 'zh-CN',
+        Colombia: 'es',
+        Comoros: 'ar',
+        CongoDemocraticRepublicofthe: 'fr',
+        CongoRepublicofthe: 'fr',
+        CostaRica: 'es',
+        Croatia: 'hr',
+        Cuba: 'es',
+        Cyprus: 'el',
+        CzechRepublic: 'cs',
+        Denmark: 'da',
+        Djibouti: 'fr',
+        Dominica: 'en',
+        DominicanRepublic: 'es',
+        Ecuador: 'es',
+        Egypt: 'ar',
+        ElSalvador: 'es',
+        EquatorialGuinea: 'es',
+        Eritrea: 'ti',
+        Estonia: 'et',
+        Eswatini: 'en',
+        Ethiopia: 'am',
+        Fiji: 'en',
+        Finland: 'fi',
+        France: 'fr',
+        Gabon: 'fr',
+        Gambia: 'en',
+        Georgia: 'ka',
+        Germany: 'de',
+        Ghana: 'en',
+        Greece: 'el',
+        Grenada: 'en',
+        Guatemala: 'es',
+        Guinea: 'fr',
+        GuineaBissau: 'pt',
+        Guyana: 'en',
+        Haiti: 'fr',
+        Honduras: 'es',
+        Hungary: 'hu',
+        Iceland: 'is',
+        India: 'hi',
+        Indonesia: 'id',
+        Iran: 'fa',
+        Iraq: 'ar',
+        Ireland: 'en',
+        Israel: 'he',
+        Italy: 'it',
+        Jamaica: 'en',
+        Japan: 'ja',
+        Jordan: 'ar',
+        Kazakhstan: 'kk',
+        Kenya: 'sw',
+        Kiribati: 'en',
+        Korea: 'ko',
+        Kosovo: 'sq',
+        Kuwait: 'ar',
+        Kyrgyzstan: 'ky',
+        Laos: 'lo',
+        Latvia: 'lv',
+        Lebanon: 'ar',
+        Lesotho: 'en',
+        Liberia: 'en',
+        Libya: 'ar',
+        Liechtenstein: 'de',
+        Lithuania: 'lt',
+        Luxembourg: 'lb',
+        Madagascar: 'mg',
+        Malawi: 'en',
+        Malaysia: 'ms',
+        Maldives: 'dv',
+        Mali: 'fr',
+        Malta: 'mt',
+        MarshallIslands: 'en',
+        Mauritania: 'ar',
+        Mauritius: 'mfe',
+        Mexico: 'es',
+        Micronesia: 'en',
+        Moldova: 'ro',
+        Monaco: 'fr',
+        Mongolia: 'mn',
+        Montenegro: 'sr',
+        Morocco: 'ar',
+        Mozambique: 'pt',
+        Myanmar: 'my',
+        Namibia: 'en',
+        Nauru: 'en',
+        Nepal: 'ne',
+        Netherlands: 'nl',
+        NewZealand: 'en',
+        Nicaragua: 'es',
+        Niger: 'fr',
+        Nigeria: 'en',
+        NorthMacedonia: 'mk',
+        Norway: 'no',
+        Oman: 'ar',
+        Pakistan: 'ur',
+        Palau: 'en',
+        Panama: 'es',
+        PapuaNewGuinea: 'en',
+        Paraguay: 'gn',
+        Peru: 'es',
+        Philippines: 'tl',
+        Poland: 'pl',
+        Portugal: 'pt',
+        Qatar: 'ar',
+        Romania: 'ro',
+        Russia: 'ru',
+        Rwanda: 'rw',
+        SaintKittsandNevis: 'en',
+        SaintLucia: 'en',
+        SaintVincentandtheGrenadines: 'en',
+        Samoa: 'sm',
+        SanMarino: 'it',
+        SaoTomeandPrincipe: 'pt',
+        SaudiArabia: 'ar',
+        Senegal: 'fr',
+        Serbia: 'sr',
+        Seychelles: 'fr',
+        SierraLeone: 'en',
+        Singapore: 'en',
+        Slovakia: 'sk',
+        Slovenia: 'sl',
+        SolomonIslands: 'en',
+        Somalia: 'so',
+        SouthAfrica: 'af',
+        SouthSudan: 'en',
+        Spain: 'es',
+        SriLanka: 'si',
+        Sudan: 'ar',
+        Suriname: 'nl',
+        Sweden: 'sv',
+        Switzerland: 'de',
+        Syria: 'ar',
+        Taiwan: 'zh-TW',
+        Tajikistan: 'tg',
+        Tanzania: 'sw',
+        Thailand: 'th',
+        TimorLeste: 'pt',
+        Togo: 'fr',
+        Tonga: 'to',
+        TrinidadandTobago: 'en',
+        Tunisia: 'ar',
+        Turkey: 'tr',
+        Turkmenistan: 'tk',
+        Tuvalu: 'en',
+        Uganda: 'en',
+        Ukraine: 'uk',
+        UnitedArabEmirates: 'ar',
+        UnitedKingdom: 'en',
+        UnitedStates: 'en',
+        Uruguay: 'es',
+        Uzbekistan: 'uz',
+        Vanuatu: 'bi',
+        Vatican: 'la',
+        Venezuela: 'es',
+        Vietnam: 'vi',
+        Yemen: 'ar',
+        Zambia: 'en',
+        Zimbabwe: 'en'
+    };
 
     useEffect(() => {
         const fetchPost = async () => {
@@ -26,23 +223,35 @@ const PostRead = ({ user }) => {
         fetchPost();
     }, [id]);
 
-    const handleTranslate = async () => {
-        const targetLanguage = user.nationality === 'Korea' ? 'en' : 'ko';  // 사용자의 국적에 따라 언어 설정
-        console.log(`Translating post to: ${targetLanguage}`);
+    const handleTranslateTitle = async (e) => {
+        e.preventDefault();  // 버튼 새로고침 기본 동작 막기
+        const targetLanguage = nationalityToLanguage[user.user.nationality] || 'ko';  // 사용자의 국적에 따라 언어 설정
+        console.log(`Translating title to: ${targetLanguage}`);
 
         try {
-            const titleResponse = await axios.post('http://127.0.0.1:5000/translate', {
+            const response = await axios.post('http://127.0.0.1:5000/translate', {
                 text: post.title,
                 target_language: targetLanguage
             });
-            const contentResponse = await axios.post('http://127.0.0.1:5000/translate', {
+            console.log(`Translated title: ${response.data.translated_text}`);
+            setTranslatedTitle(response.data.translated_text);
+        } catch (error) {
+            console.error('Translation error:', error);
+        }
+    };
+
+    const handleTranslateContent = async (e) => {
+        e.preventDefault();  // 버튼 새로고침 기본 동작 막기
+        const targetLanguage = nationalityToLanguage[user.user.nationality] || 'ko';  // 사용자의 국적에 따라 언어 설정
+        console.log(`Translating content to: ${targetLanguage}`);
+
+        try {
+            const response = await axios.post('http://127.0.0.1:5000/translate', {
                 text: post.content,
                 target_language: targetLanguage
             });
-            console.log(`Translated title: ${titleResponse.data.translated_text}`);
-            console.log(`Translated content: ${contentResponse.data.translated_text}`);
-            setTranslatedTitle(titleResponse.data.translated_text);
-            setTranslatedContent(contentResponse.data.translated_text);
+            console.log(`Translated content: ${response.data.translated_text}`);
+            setTranslatedContent(response.data.translated_text);
         } catch (error) {
             console.error('Translation error:', error);
         }
@@ -90,11 +299,11 @@ const PostRead = ({ user }) => {
                         <div className="card-body">
                             <label htmlFor="title">제목</label>
                             <input type="text" className="form-control" id="title" value={translatedTitle || post.title} readOnly />
-                            <button type="button" className="btn btn-secondary" onClick={() => handleTranslate(post.title, setTranslatedTitle)}>번역 보기</button>
+                            <button onClick={handleTranslateTitle} className="btn btn-secondary mt-1">번역 보기</button>
                             <br />
                             <label htmlFor="content">내용</label>
                             <textarea rows="5" className="form-control" id="content" value={translatedContent || post.content} readOnly></textarea>
-                            <button type="button" className="btn btn-secondary" onClick={() => handleTranslate(post.content, setTranslatedContent)}>번역 보기</button>
+                            <button onClick={handleTranslateContent} className="btn btn-secondary mt-1">번역 보기</button>
                         </div>
                     </form>
 
@@ -110,10 +319,8 @@ const PostRead = ({ user }) => {
                         </div>
                     </div>
 
-
                     {/* Comments */}
-                    <Comments postId={post.id} user={user} />
-                    <CommentForm postId={post.id} />
+                    <Comments postId={post.id} userId={user.user.id} />
                 </div>
             </div>
         </>
