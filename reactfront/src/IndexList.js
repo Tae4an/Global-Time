@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import { useTranslation } from 'react-i18next';
 
 const IndexList = () => {
+    const { t } = useTranslation();
     const [posts, setPosts] = useState([]);
     const [error, setError] = useState(null);
 
@@ -19,12 +21,12 @@ const IndexList = () => {
             })
             .catch(error => {
                 setError(error);
-                console.error("There was an error fetching the posts!", error);
+                console.error(t('fetchError'), error);
             });
-    }, []);
+    }, [t]);
 
     if (error) {
-        return <div>There was an error fetching the posts: {error.message}</div>;
+        return <div>{t('fetchError')}: {error.message}</div>;
     }
 
     return (
@@ -32,11 +34,11 @@ const IndexList = () => {
             <table id="table" className="table table-horizontal">
                 <thead id="thead">
                 <tr>
-                    <th>번호</th>
-                    <th className="col-md-6 text-center">제목</th>
-                    <th>작성자</th>
-                    <th>작성일</th>
-                    <th>조회수</th>
+                    <th>{t('number')}</th>
+                    <th className="col-md-6 text-center">{t('title')}</th>
+                    <th>{t('writer')}</th>
+                    <th>{t('createdDate')}</th>
+                    <th>{t('views')}</th>
                 </tr>
                 </thead>
                 <tbody id="tbody">
@@ -52,7 +54,7 @@ const IndexList = () => {
                 </tbody>
             </table>
             <div className="text-right">
-                <Link to="/posts/write" role="button" className="btn btn-primary bi bi-pencil-fill"> 글쓰기</Link>
+                <Link to="/posts/write" role="button" className="btn btn-primary bi bi-pencil-fill"> {t('write')}</Link>
             </div>
         </div>
     );

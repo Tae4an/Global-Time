@@ -2,8 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import Comments from '../comment/Comments';
+import { useTranslation } from 'react-i18next';
 
 const PostRead = ({ user }) => {
+    const { t } = useTranslation();
     const { id } = useParams();
     const [post, setPost] = useState(null);
     const [error, setError] = useState(null);
@@ -270,11 +272,11 @@ const PostRead = ({ user }) => {
     };
 
     const handleDelete = () => {
-        const confirmDelete = window.confirm('정말 삭제하시겠습니까?');
+        const confirmDelete = window.confirm(t('confirmDelete'));
         if (confirmDelete) {
             axios.delete(`http://localhost:8080/api/posts/${id}`)
                 .then(() => {
-                    alert('게시글이 삭제되었습니다.');
+                    alert(t('deleteSuccess'));
                     navigate('/posts');
                 })
                 .catch(error => {
@@ -284,11 +286,11 @@ const PostRead = ({ user }) => {
     };
 
     if (error) {
-        return <div>There was an error fetching the post: {error.message}</div>;
+        return <div>{t('errorFetchingPost')}: {error.message}</div>;
     }
 
     if (!post) {
-        return <div>Loading...</div>;
+        return <div>{t('loading')}</div>;
     }
 
     const isWriter = user && user.nickname === post.writer;
@@ -300,16 +302,16 @@ const PostRead = ({ user }) => {
                 <div className="col-md-12">
                     <form className="card">
                         <div className="card-header d-flex justify-content-between">
-                            <label htmlFor="id">번호 : {post.id}</label>
+                            <label htmlFor="id">{t('number')} : {post.id}</label>
                             <input type="hidden" id="id" value={post.id} />
                             <label htmlFor="createdDate">{post.createdDate}</label>
                         </div>
                         <div className="card-header d-flex justify-content-between">
-                            <label htmlFor="writer">작성자 : {post.writer}</label>
+                            <label htmlFor="writer">{t('writer')} : {post.writer}</label>
                             <label htmlFor="view"><i className="bi bi-eye-fill"> {post.view}</i></label>
                         </div>
                         <div className="card-body">
-                            <label htmlFor="title">제목</label>
+                            <label htmlFor="title">{t('title')}</label>
                             <input
                                 type="text"
                                 className="form-control"
@@ -318,10 +320,10 @@ const PostRead = ({ user }) => {
                                 readOnly
                             />
                             <button onClick={handleTranslateTitle} className="btn btn-secondary mt-1">
-                                {showOriginalTitle ? '번역 보기' : '원본 보기'}
+                                {showOriginalTitle ? t('translate') : t('original')}
                             </button>
                             <br />
-                            <label htmlFor="content">내용</label>
+                            <label htmlFor="content">{t('content')}</label>
                             <textarea
                                 rows="5"
                                 className="form-control"
@@ -330,18 +332,18 @@ const PostRead = ({ user }) => {
                                 readOnly
                             ></textarea>
                             <button onClick={handleTranslateContent} className="btn btn-secondary mt-1">
-                                {showOriginalContent ? '번역 보기' : '원본 보기'}
+                                {showOriginalContent ? t('translate') : t('original')}
                             </button>
                         </div>
                     </form>
 
                     <div className="d-flex justify-content-between mt-2">
-                        <Link to="/posts" role="button" className="btn btn-info bi bi-arrow-return-left"> 목록</Link>
+                        <Link to="/posts" role="button" className="btn btn-info bi bi-arrow-return-left"> {t('list')}</Link>
                         <div>
                             {isWriter && (
                                 <>
-                                    <Link to={`/posts/update/${post.id}`} role="button" className="btn btn-primary bi bi-pencil-square mx-1"> 수정</Link>
-                                    <button type="button" onClick={handleDelete} className="btn btn-danger bi bi-trash mx-1"> 삭제</button>
+                                    <Link to={`/posts/update/${post.id}`} role="button" className="btn btn-primary bi bi-pencil-square mx-1"> {t('edit')}</Link>
+                                    <button type="button" onClick={handleDelete} className="btn btn-danger bi bi-trash mx-1"> {t('delete')}</button>
                                 </>
                             )}
                         </div>

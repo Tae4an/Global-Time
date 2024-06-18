@@ -2,14 +2,15 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import '../css/Comment.css';
 import CommentForm from './CommentForm';
+import { useTranslation } from 'react-i18next';
 
 const Comments = ({ postId, userId }) => {
+    const { t } = useTranslation();
     const [comments, setComments] = useState([]);
     const [translatedComments, setTranslatedComments] = useState({});
     const [showOriginalComments, setShowOriginalComments] = useState({});
     const [user, setUser] = useState(null);
 
-    // 번역을 위한 국가별 언어 코드 매핑
     const nationalityToLanguage = {
         Afghanistan: 'fa',
         Albania: 'sq',
@@ -304,11 +305,11 @@ const Comments = ({ postId, userId }) => {
                         <p>{showOriginalComments[comment.id] ? translatedComments[comment.id] : comment.comment}</p>
                     </div>
                     <button onClick={() => handleTranslate(comment.id, comment.comment)} className="btn btn-secondary btn-sm">
-                        {showOriginalComments[comment.id] ? '원본 보기' : '번역 보기'}
+                        {showOriginalComments[comment.id] ? t('original') : t('translate')}
                     </button>
                     {user && user.nickname === comment.nickname && (
                         <div className="comment-actions">
-                            <button onClick={() => handleDelete(comment.id)} className="btn btn-danger btn-sm">삭제</button>
+                            <button onClick={() => handleDelete(comment.id)} className="btn btn-danger btn-sm">{t('delete')}</button>
                         </div>
                     )}
                 </div>

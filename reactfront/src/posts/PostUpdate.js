@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
+import { useTranslation } from 'react-i18next';
 
 const PostUpdate = () => {
+    const { t } = useTranslation();
     const { id } = useParams();
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
@@ -15,9 +17,9 @@ const PostUpdate = () => {
                 setContent(response.data.content);
             })
             .catch(error => {
-                console.error('There was an error fetching the post!', error);
+                console.error(t('errorFetchingPost'), error);
             });
-    }, [id]);
+    }, [id, t]);
 
     const handleUpdate = () => {
         const postData = {
@@ -38,11 +40,11 @@ const PostUpdate = () => {
         <div className="col-md-12">
             <form className="card">
                 <div className="card-header d-flex justify-content-between">
-                    <label htmlFor="id">번호 : {id}</label>
+                    <label htmlFor="id">{t('number')} : {id}</label>
                     <input type="hidden" id="id" value={id} />
                 </div>
                 <div className="card-body">
-                    <label htmlFor="title">제목</label>
+                    <label htmlFor="title">{t('title')}</label>
                     <input
                         type="text"
                         className="form-control"
@@ -52,7 +54,7 @@ const PostUpdate = () => {
                     />
                 </div>
                 <div className="card-body">
-                    <label htmlFor="content">내용</label>
+                    <label htmlFor="content">{t('content')}</label>
                     <textarea
                         rows="5"
                         className="form-control"
@@ -62,8 +64,8 @@ const PostUpdate = () => {
                     ></textarea>
                 </div>
             </form>
-            <a href={`/posts/read/${id}`} role="button" className="btn btn-info bi bi-arrow-return-left"> 취소</a>
-            <button type="button" onClick={handleUpdate} className="btn btn-primary bi bi-pencil-square"> 완료</button>
+            <a href={`/posts/read/${id}`} role="button" className="btn btn-info bi bi-arrow-return-left"> {t('cancel')}</a>
+            <button type="button" onClick={handleUpdate} className="btn btn-primary bi bi-pencil-square"> {t('update')}</button>
         </div>
     );
 };
