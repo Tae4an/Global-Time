@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useUser } from '../context/UserContext';
 import { useTranslation } from 'react-i18next';
+import './PostCreate.css'
 
 const PostCreate = () => {
     const { t } = useTranslation();

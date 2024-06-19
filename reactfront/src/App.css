@@ -50,14 +50,6 @@ input:invalid {
   border-bottom: 2px;
 }
 
-#posts_list {
-  position: relative;
-  min-height: 100%;
-  width: 100%;
-  max-width: 1100px;
-  margin: 0 auto 20px auto;
-}
-
 #table {
   border-bottom: 2px solid gainsboro;
 }
