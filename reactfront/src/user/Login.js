@@ -25,7 +25,13 @@ const Login = ({ error }) => {
             if (response.data.error) {
                 alert(`로그인 실패: ${response.data.message}`);
             } else {
-                alert('로그인 성공');
+                // 관리자 계정 확인 후 별도의 알림 표시
+                if (response.data.user.role === 'ADMIN') {
+                    alert('관리자 계정으로 로그인했습니다.');
+                }
+                else {
+                    alert('로그인 성공');
+                }
                 console.log('로그인 응답:', response.data.user);
                 setUser(response.data.user);
                 setToken(response.data.token);
@@ -33,6 +39,8 @@ const Login = ({ error }) => {
                 // 로컬 스토리지에 사용자 정보와 토큰 저장
                 localStorage.setItem('user', JSON.stringify(response.data.user));
                 localStorage.setItem('token', response.data.token);
+
+
 
                 navigate("/posts");
             }
