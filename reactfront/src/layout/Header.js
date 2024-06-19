@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
-import '../App.css';
+import '../css/Header.css';
 import { useUser } from '../context/UserContext';
 import { useTranslation } from 'react-i18next';
 
@@ -37,17 +37,17 @@ const Header = () => {
         <>
             <div id="header" className="d-flex bd-highlight">
                 <Link to="/posts" className="p-2 flex-grow-1 bd-highlight">Global Time</Link>
-                <form action="/posts/search" method="GET" className="form-inline p-2 bd-highlight" role="search">
+                <form action="/posts/search" method="GET" className="input-group p-2 bd-highlight">
                     <input type="text" name="keyword" className="form-control" id="search" placeholder={t('search')} />
-                    <button className="btn btn-success bi bi-search" type="submit"></button>
+                    <button className="btn btn-search bi bi-search" type="submit"></button>
                 </form>
             </div>
 
-            <nav id="nav" className="navbar navbar-expand-lg navbar-light bg-light">
+            <nav id="nav" className="navbar navbar-expand-lg navbar-light">
                 <div className="collapse navbar-collapse justify-content-end">
                     {user ? (
                         <>
-                            <span className="mx-3">{t('greeting', { name: user.realName })}</span>
+                            <span className="navbar-text mx-3">{t('greeting', { name: user.realName })}</span>
                             {user.role === 'ADMIN' && (
                                 <Link to="/admin" className="btn btn-outline-dark mx-1">{t('admin')}</Link>
                             )}

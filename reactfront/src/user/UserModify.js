@@ -3,6 +3,7 @@ import { useUser } from '../context/UserContext';
 import axios from 'axios';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import { useTranslation } from 'react-i18next';
+import '../css/UserModify.css';
 
 const UserModify = () => {
     const { t, i18n } = useTranslation();
@@ -105,7 +106,7 @@ const UserModify = () => {
 
     return (
         <div id="posts_list">
-            <div className="container col-md-4">
+            <div className="container col-md-4 user-modify-container">
                 <form onSubmit={handleSubmit}>
                     <input type="hidden" id="id" value={user.id} />
                     <input type="hidden" id="modifiedDate" value={user.modifiedDate} />

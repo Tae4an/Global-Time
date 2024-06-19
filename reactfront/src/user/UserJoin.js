@@ -55,7 +55,7 @@ const UserJoin = () => {
         setUniversitySelected(false);
         if (query.length > 1) {
             try {
-                const response = await axios.get('/api/universities/search', { params: { query } });
+                const response = await axios.get('/api/universities/search', {params: {query}});
                 setUniversities(response.data);
             } catch (error) {
                 console.error('Error fetching universities:', error);
@@ -76,6 +76,7 @@ const UserJoin = () => {
         if (currentStep === 1) {
             if (!universitySelected) newErrors.university = '대학교를 선택해주세요.';
             if (!department) newErrors.department = '학과를 선택해주세요.';
+            if (!nationality) newErrors.nationality = '국적을 선택해주세요.';
         } else if (currentStep === 2) {
             if (!username) newErrors.username = '아이디를 입력해주세요.';
             if (!password) newErrors.password = '비밀번호를 입력해주세요.';
@@ -86,7 +87,6 @@ const UserJoin = () => {
             if (!email) newErrors.email = '이메일을 입력해주세요.';
             if (!validateEmail(email)) newErrors.email = '올바른 이메일 형식을 입력해주세요.';
             if (!studentCard) newErrors.studentCard = '학생증을 업로드해주세요.';
-            if (!nationality) newErrors.nationality = '국적을 선택해주세요.';
         }
         setErrors(newErrors);
         if (Object.keys(newErrors).length > 0) {
@@ -119,7 +119,7 @@ const UserJoin = () => {
             university,
             nationality
         };
-        formData.append('user', new Blob([JSON.stringify(user)], { type: 'application/json' }));
+        formData.append('user', new Blob([JSON.stringify(user)], {type: 'application/json'}));
         formData.append('studentCard', studentCard);
         try {
             const response = await axios.post('http://localhost:8080/api/auth/joinProc', formData, {
@@ -159,12 +159,12 @@ const UserJoin = () => {
     const checkUsernameAvailability = async () => {
         if (!username) {
             alert('아이디를 입력해주세요.');
-            setErrors((prevErrors) => ({ ...prevErrors, username: '아이디를 입력해주세요.' }));
+            setErrors((prevErrors) => ({...prevErrors, username: '아이디를 입력해주세요.'}));
             return;
         }
 
         try {
-            const response = await axios.get('/api/auth/checkUsername', { params: { username } });
+            const response = await axios.get('/api/auth/checkUsername', {params: {username}});
             setIsUsernameAvailable(response.data.available);
             if (response.data.available) {
                 alert('사용 가능한 아이디입니다.');
@@ -179,12 +179,12 @@ const UserJoin = () => {
     const checkNicknameAvailability = async () => {
         if (!nickname) {
             alert('닉네임을 입력해주세요.');
-            setErrors((prevErrors) => ({ ...prevErrors, nickname: '닉네임을 입력해주세요.' }));
+            setErrors((prevErrors) => ({...prevErrors, nickname: '닉네임을 입력해주세요.'}));
             return;
         }
 
         try {
-            const response = await axios.get('/api/auth/checkNickname', { params: { nickname } });
+            const response = await axios.get('/api/auth/checkNickname', {params: {nickname}});
             setIsNicknameAvailable(response.data.available);
             if (response.data.available) {
                 alert('사용 가능한 닉네임입니다.');
@@ -205,7 +205,7 @@ const UserJoin = () => {
         setter(e.target.value);
         if (errors[field]) {
             setErrors((prevErrors) => {
-                const newErrors = { ...prevErrors };
+                const newErrors = {...prevErrors};
                 delete newErrors[field];
                 return newErrors;
             });
@@ -223,8 +223,9 @@ const UserJoin = () => {
     };
 
     return (
-        <div id="posts_list">
-            <div className="container col-md-4">
+        <div id="user-join-page" className="d-flex justify-content-center align-items-center">
+            <div className="user-join-container card p-4 shadow">
+                <h2 className="text-center mb-4">회원가입</h2>
                 <form onSubmit={handleSubmit}>
                     {currentStep === 1 && (
                         <>
@@ -268,7 +269,26 @@ const UserJoin = () => {
                                 </select>
                                 {errors.department && <div className="invalid-feedback">{errors.department}</div>}
                             </div>
-                            <button type="button" className="btn btn-primary" onClick={handleNextStep}>다음</button>
+                            <div className="form-group">
+                                <label>국적</label>
+                                <select
+                                    name="nationality"
+                                    value={nationality}
+                                    onChange={(e) => handleInputChange(e, setNationality, 'nationality')}
+                                    className="form-control"
+                                >
+                                    <option value="">국적을 선택해주세요</option>
+                                    {nationalities.map((nat, index) => (
+                                        <option key={index} value={nat.name}>
+                                            {nat.name}
+                                        </option>
+                                    ))}
+                                </select>
+                                {errors.nationality && <div className="invalid-feedback">{errors.nationality}</div>}
+                            </div>
+                            <div className="d-flex justify-content-end mt-4">
+                                <button type="button" className="btn btn-primary" onClick={handleNextStep}>다음</button>
+                            </div>
                         </>
                     )}
                     {currentStep === 2 && (
@@ -285,7 +305,9 @@ const UserJoin = () => {
                                         placeholder="아이디를 입력해주세요"
                                     />
                                     <div className="input-group-append">
-                                        <button type="button" className="btn btn-outline-secondary" onClick={checkUsernameAvailability}>중복확인</button>
+                                        <button type="button" className="btn btn-outline-secondary"
+                                                onClick={checkUsernameAvailability}>중복확인
+                                        </button>
                                     </div>
                                     {errors.username && <div className="invalid-feedback">{errors.username}</div>}
                                 </div>
@@ -329,7 +351,8 @@ const UserJoin = () => {
                                             <i className="bi bi-eye"></i>
                                         </button>
                                     </div>
-                                    {errors.confirmPassword && <div className="invalid-feedback">{errors.confirmPassword}</div>}
+                                    {errors.confirmPassword &&
+                                        <div className="invalid-feedback">{errors.confirmPassword}</div>}
                                 </div>
                             </div>
                             <div className="form-group">
@@ -344,7 +367,9 @@ const UserJoin = () => {
                                         placeholder="닉네임을 입력해주세요"
                                     />
                                     <div className="input-group-append">
-                                        <button type="button" className="btn btn-outline-secondary" onClick={checkNicknameAvailability}>중복확인</button>
+                                        <button type="button" className="btn btn-outline-secondary"
+                                                onClick={checkNicknameAvailability}>중복확인
+                                        </button>
                                     </div>
                                     {errors.nickname && <div className="invalid-feedback">{errors.nickname}</div>}
                                 </div>
@@ -376,23 +401,6 @@ const UserJoin = () => {
                                 {errors.email && <div className="invalid-feedback">{errors.email}</div>}
                             </div>
                             <div className="form-group">
-                                <label>국적</label>
-                                <select
-                                    name="nationality"
-                                    value={nationality}
-                                    onChange={(e) => handleInputChange(e, setNationality, 'nationality')}
-                                    className="form-control"
-                                >
-                                    <option value="">국적을 선택해주세요</option>
-                                    {nationalities.map((nat, index) => (
-                                        <option key={index} value={nat.name}>
-                                            {nat.name}
-                                        </option>
-                                    ))}
-                                </select>
-                                {errors.nationality && <div className="invalid-feedback">{errors.nationality}</div>}
-                            </div>
-                            <div className="form-group">
                                 <label>학생증 업로드</label>
                                 <input
                                     type="file"
@@ -402,15 +410,19 @@ const UserJoin = () => {
                                 />
                                 {errors.studentCard && <div className="invalid-feedback">{errors.studentCard}</div>}
                             </div>
-                            <button type="button" className="btn btn-secondary" onClick={handlePreviousStep}>이전</button>
-                            <button type="submit" className="btn btn-primary bi bi-person">가입</button>
+                            <div className="d-flex justify-content-between mt-4">
+                                <button type="button" className="btn btn-secondary" onClick={handlePreviousStep}>이전
+                                </button>
+                                <button type="submit" className="btn btn-primary">가입</button>
+                            </div>
                         </>
                     )}
                 </form>
-                <a href="/" role="button" className="btn btn-info bi bi-arrow-return-left">목록</a>
+                <div className="text-center mt-3">
+                    <a href="/" role="button" className="btn btn-info bi bi-arrow-return-left">목록</a>
+                </div>
             </div>
         </div>
     );
-};
-
+}
 export default UserJoin;

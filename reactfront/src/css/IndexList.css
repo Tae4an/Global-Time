@@ -1,0 +1,61 @@
+.posts-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1rem;
+    padding: 2rem;
+    position: relative; /* 상대적 위치 지정 */
+}
+
+.post-card {
+    width: 300px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s;
+}
+
+.post-card:hover {
+    transform: scale(1.05);
+}
+
+.post-card-body {
+    padding: 1rem;
+}
+
+.post-card-title {
+    font-size: 1.25rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+}
+
+.post-card-text {
+    font-size: 0.9rem;
+    color: #555;
+}
+
+.post-card-footer {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.5rem 1rem;
+    background-color: #f8f9fa;
+    border-top: 1px solid #ddd;
+    border-radius: 0 0 8px 8px;
+    font-size: 0.8rem;
+    color: #888;
+}
+
+.write-button {
+    position: fixed; /* 고정 위치 지정 */
+    bottom: 20rem; /* 하단 여백 */
+    right: 20rem; /* 우측 여백 */
+    z-index: 1000; /* 다른 요소들 위에 표시 */
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+}

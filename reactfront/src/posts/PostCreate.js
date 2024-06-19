@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useUser } from '../context/UserContext';
 import { useTranslation } from 'react-i18next';
-import './PostCreate.css'
+import '../css/PostCreate.css'
 
 const PostCreate = () => {
     const { t } = useTranslation();
@@ -39,7 +39,7 @@ const PostCreate = () => {
     };
 
     return (
-        <div className="container col-md-8">
+        <div className="container col-md-8 mt-5">
             <form>
                 <div className="form-group">
                     <label htmlFor="title">{t('title')}</label>
@@ -64,8 +64,10 @@ const PostCreate = () => {
                     ></textarea>
                 </div>
             </form>
-            <button type="button" onClick={handleSave} className="btn btn-primary bi bi-pencil-fill"> {t('create')}</button>
-            <a href="/posts" role="button" className="btn btn-info bi bi-arrow-return-left"> {t('list')}</a>
+            <div className="d-flex justify-content-end">
+                <button type="button" onClick={handleSave} className="btn btn-primary bi bi-pencil-fill"> {t('create')}</button>
+                <a href="/posts" role="button" className="btn btn-info bi bi-arrow-return-left"> {t('list')}</a>
+            </div>
         </div>
     );
 };

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import Comments from '../comment/Comments';
+import '../css/PostRead.css'
 import { useTranslation } from 'react-i18next';
 
 const PostRead = ({ user }) => {
