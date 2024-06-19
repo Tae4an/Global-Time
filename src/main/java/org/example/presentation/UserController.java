@@ -47,6 +47,18 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
+
+    @PostMapping("/auth/modify")
+    public ResponseEntity<?> modifyUser(@RequestBody UserDto.ModifyRequest dto) {
+        try {
+            userService.modifyUser(dto);
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            System.out.println("auth Modify ErrorMessage :" + e);
+            return ResponseEntity.status(400).body(e.getMessage());
+        }
+    }
+
     @GetMapping("/auth/checkUsername")
     @ResponseBody
     public ResponseEntity<?> checkUsername(@RequestParam String username) {
