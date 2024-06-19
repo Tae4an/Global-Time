@@ -27,8 +27,8 @@ public class UserApiController {
     private final AuthenticationManager authenticationManager;
 
     @PutMapping("/user")
-    public ResponseEntity<String> modify(@RequestBody UserDto.Request dto) {
-        userService.modify(dto);
+    public ResponseEntity<String> modify(@RequestBody UserDto.ModifyRequest dto) {
+        userService.modifyUser(dto);
 
         /* 변경된 세션 등록 */
         Authentication authentication = authenticationManager.authenticate(
