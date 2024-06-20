@@ -51,12 +51,20 @@ public class UserService {
     }
 
     @Transactional
-    public void modify(UserDto.Request dto) {
-        User user = userRepository.findById(dto.toEntity().getId()).orElseThrow(() ->
-                new IllegalArgumentException("해당 회원이 존재하지 않습니다."));
+    public void modifyUser(UserDto.ModifyRequest dto) {
+        User user = userRepository.findById(dto.getId()).orElseThrow(() ->
+                new IllegalArgumentException("해당 사용자가 없습니다. id=" + dto.getId()));
 
-        String encPassword = encoder.encode(dto.getPassword());
-        user.modify(dto.getNickname(), encPassword, dto.getUniversity(), dto.getNationality(), dto.getDepartment());
+        if (dto.getPassword() != null && !dto.getPassword().isEmpty()) {
+            String encPassword = encoder.encode(dto.getPassword());
+            user.setPassword(encPassword);
+        }
+
+        user.setNickname(dto.getNickname());
+        user.setNationality(dto.getNationality());
+        user.setUsername(dto.getUsername());
+
+        userRepository.save(user);
     }
 
     @Transactional
@@ -81,5 +89,9 @@ public class UserService {
     public List<UserDto.Response> getUsersForApproval() {
         List<User> users = userRepository.findAllByVerifiedFalse();
         return users.stream().map(UserDto.Response::new).collect(Collectors.toList());
+    }
+
+    public User getUserById(Long id) {
+        return userRepository.findById(id).orElse(null);
     }
 }

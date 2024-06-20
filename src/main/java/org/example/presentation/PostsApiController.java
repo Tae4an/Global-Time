@@ -32,6 +32,7 @@ public class PostsApiController {
     @GetMapping("/{id}")
     public ResponseEntity<PostsDto.Response> findById(@PathVariable Long id) {
         PostsDto.Response post = postsService.findById(id);
+        postsService.updateView(id);
         return ResponseEntity.ok(post);
     }
 

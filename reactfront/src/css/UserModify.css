@@ -1,0 +1,70 @@
+.user-modify-container {
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    margin-top: 20px;
+}
+
+.user-modify-container .form-group {
+    margin-bottom: 15px;
+}
+
+.user-modify-container label {
+    font-weight: bold;
+    color: #343a40;
+}
+
+.user-modify-container .form-control {
+    border-radius: 5px;
+    border: 1px solid #ced4da;
+    padding: 10px;
+    font-size: 1rem;
+}
+
+.user-modify-container .form-control:focus {
+    border-color: #80bdff;
+    outline: 0;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.25);
+}
+
+.user-modify-container .input-group-append .btn {
+    border-radius: 5px;
+}
+
+.user-modify-container .btn {
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 1rem;
+    margin-top: 10px;
+}
+
+.user-modify-container .btn-primary {
+    background-color: #007bff;
+    border-color: #007bff;
+}
+
+.user-modify-container .btn-primary:hover {
+    background-color: #0056b3;
+    border-color: #004085;
+}
+
+.user-modify-container .btn-secondary {
+    background-color: #6c757d;
+    border-color: #6c757d;
+}
+
+.user-modify-container .btn-secondary:hover {
+    background-color: #5a6268;
+    border-color: #545b62;
+}
+
+.user-modify-container .btn-info {
+    background-color: #17a2b8;
+    border-color: #17a2b8;
+}
+
+.user-modify-container .btn-info:hover {
+    background-color: #138496;
+    border-color: #117a8b;
+}

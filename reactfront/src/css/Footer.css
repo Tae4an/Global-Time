@@ -1,0 +1,31 @@
+#footer {
+    background-color: #343a40;
+    color: #ffffff;
+    padding: 0.5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1.5rem;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+
+#footer a {
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 1.2rem;
+    transition: color 0.3s;
+}
+
+#footer a:hover {
+    color: #007bff;
+}
+
+#footer i {
+    font-size: 1rem;
+}
+
+#footer .bi-phone {
+    margin-left: 0.5rem;
+}

@@ -75,6 +75,21 @@ public class UserDto {
         }
     }
 
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    public static class ModifyRequest {
+        private Long id;
+        private String username;
+        private String password;
+        private String nickname;
+        private String nationality;
+
+        public String getUsername() {
+            return username;
+        }
+    }
+
     /**
      * 인증된 사용자 정보를 세션에 저장하기 위한 클래스
      * 세션을 저장하기 위해 User 엔티티 클래스를 직접 사용하게 되면 직렬화를 해야 하는데,

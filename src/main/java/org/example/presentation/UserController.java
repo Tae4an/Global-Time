@@ -4,6 +4,7 @@ import org.example.application.UserService;
 import lombok.RequiredArgsConstructor;
 import org.example.application.dto.UserDto;
 import org.example.application.validator.CustomValidators;
+import org.example.domain.User;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.Errors;
@@ -46,6 +47,18 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
+
+    @PostMapping("/auth/modify")
+    public ResponseEntity<?> modifyUser(@RequestBody UserDto.ModifyRequest dto) {
+        try {
+            userService.modifyUser(dto);
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            System.out.println("auth Modify ErrorMessage :" + e);
+            return ResponseEntity.status(400).body(e.getMessage());
+        }
+    }
+
     @GetMapping("/auth/checkUsername")
     @ResponseBody
     public ResponseEntity<?> checkUsername(@RequestParam String username) {
@@ -65,5 +78,14 @@ public class UserController {
     public ResponseEntity<?> verifyStudent(@RequestParam Long userId) {
         userService.verifyStudent(userId);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/users/{id}")
+    public ResponseEntity<User> getUserById(@PathVariable Long id) {
+        User user = userService.getUserById(id);
+        if (user == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(user);
     }
 }

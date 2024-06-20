@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import { useTranslation } from 'react-i18next';
+import './css/IndexList.css';
 
 const IndexList = () => {
+    const { t } = useTranslation();
     const [posts, setPosts] = useState([]);
     const [error, setError] = useState(null);
 
@@ -10,7 +13,6 @@ const IndexList = () => {
         axios.get('/api/posts')
             .then(response => {
                 console.log(response.data); // 디버깅을 위해 응답 데이터를 출력
-                // 응답 데이터가 Page 객체일 경우 content를 사용하여 실제 데이터를 가져옴
                 if (response.data && response.data.content) {
                     setPosts(response.data.content);
                 } else {
@@ -19,41 +21,32 @@ const IndexList = () => {
             })
             .catch(error => {
                 setError(error);
-                console.error("There was an error fetching the posts!", error);
+                console.error(t('fetchError'), error);
             });
-    }, []);
+    }, [t]);
 
     if (error) {
-        return <div>There was an error fetching the posts: {error.message}</div>;
+        return <div>{t('fetchError')}: {error.message}</div>;
     }
 
     return (
-        <div id="posts_list">
-            <table id="table" className="table table-horizontal">
-                <thead id="thead">
-                <tr>
-                    <th>번호</th>
-                    <th className="col-md-6 text-center">제목</th>
-                    <th>작성자</th>
-                    <th>작성일</th>
-                    <th>조회수</th>
-                </tr>
-                </thead>
-                <tbody id="tbody">
-                {posts.map(post => (
-                    <tr key={post.id}>
-                        <td>{post.id}</td>
-                        <td><Link to={`/posts/read/${post.id}`}>{post.title}</Link></td>
-                        <td>{post.writer}</td>
-                        <td>{post.createdDate}</td>
-                        <td>{post.view}</td>
-                    </tr>
-                ))}
-                </tbody>
-            </table>
-            <div className="text-right">
-                <Link to="/posts/write" role="button" className="btn btn-primary bi bi-pencil-fill"> 글쓰기</Link>
-            </div>
+        <div className="posts-container">
+            {posts.map(post => (
+                <div key={post.id} className="post-card">
+                    <div className="post-card-body">
+                        <h5 className="post-card-title">
+                            <Link to={`/posts/read/${post.id}`}>{post.title}</Link>
+                        </h5>
+                        <p className="post-card-text">{post.content.substring(0, 100)}...</p>
+                    </div>
+                    <div className="post-card-footer">
+                        <span>{post.writer}</span>
+                        <span>{post.createdDate}</span>
+                        <span><i className="bi bi-eye-fill"></i> {post.view}</span>
+                    </div>
+                </div>
+            ))}
+            <Link to="/posts/write" role="button" className="btn btn-primary bi bi-pencil-fill write-button"></Link>
         </div>
     );
 };

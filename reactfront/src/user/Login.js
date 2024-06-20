@@ -1,8 +1,8 @@
-// Login.js
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useUser } from '../context/UserContext';
 import { useNavigate } from 'react-router-dom';
+import '../css/Login.css'; // 추가된 CSS 파일
 
 const Login = ({ error }) => {
     const [username, setUsername] = useState('');
@@ -25,7 +25,12 @@ const Login = ({ error }) => {
             if (response.data.error) {
                 alert(`로그인 실패: ${response.data.message}`);
             } else {
-                alert('로그인 성공');
+                // 관리자 계정 확인 후 별도의 알림 표시
+                if (response.data.user.role === 'ADMIN') {
+                    alert('관리자 계정으로 로그인했습니다.');
+                } else {
+                    alert('로그인 성공');
+                }
                 console.log('로그인 응답:', response.data.user);
                 setUser(response.data.user);
                 setToken(response.data.token);
@@ -48,15 +53,17 @@ const Login = ({ error }) => {
     };
 
     return (
-        <div id="posts_list">
-            <div className="container col-md-6">
-                <form onSubmit={handleSubmit}>
+        <div id="login-page" className="d-flex justify-content-center align-items-center">
+            <div className="login-container col-md-6">
+                <form onSubmit={handleSubmit} className="login-form card p-4 shadow">
+                    <h3 className="text-center mb-4">로그인</h3>
                     <div className="form-group">
-                        <label>아이디</label>
+                        <label htmlFor="username">아이디</label>
                         <input
                             type="text"
                             className="form-control"
                             name="username"
+                            id="username"
                             value={username}
                             onChange={(e) => setUsername(e.target.value)}
                             placeholder="아이디를 입력해주세요"
@@ -64,11 +71,12 @@ const Login = ({ error }) => {
                     </div>
 
                     <div className="form-group">
-                        <label>비밀번호</label>
+                        <label htmlFor="password">비밀번호</label>
                         <input
                             type="password"
                             className="form-control"
                             name="password"
+                            id="password"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                             placeholder="비밀번호를 입력해주세요"
@@ -79,7 +87,7 @@ const Login = ({ error }) => {
                         {error && <p id="valid" className="alert alert-danger">{error.exception}</p>}
                     </span>
 
-                    <button type="submit" className="form-control btn btn-primary bi bi-lock-fill">로그인</button>
+                    <button type="submit" className="btn btn-primary btn-block bi bi-lock-fill">로그인</button>
                 </form>
             </div>
         </div>

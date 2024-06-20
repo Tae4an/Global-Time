@@ -1,0 +1,60 @@
+#header {
+    background-color: #343a40;
+    color: white;
+    padding: 1rem;
+    display: flex;
+    align-items: center;
+}
+
+#header a {
+    color: white;
+    text-decoration: none;
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+#header .input-group {
+    margin-left: auto;
+    width: 300px;
+}
+
+#header .form-control {
+    border-radius: 20px 0 0 20px;
+}
+
+#header .btn-success {
+    border-radius: 0 20px 20px 0;
+}
+
+#nav {
+    background-color: #f8f9fa;
+    padding: 0.5rem 1rem;
+    border-bottom: 1px solid #ddd;
+}
+
+#nav .navbar-collapse {
+    justify-content: flex-end;
+}
+
+#nav .navbar-nav .nav-item .nav-link {
+    margin-right: 1rem;
+    color: #343a40;
+}
+
+#nav .navbar-nav .nav-item .nav-link:hover {
+    color: #007bff;
+}
+
+#nav .btn-outline-dark {
+    margin-left: 0.5rem;
+}
+#header .btn-search {
+    border-radius: 0 20px 20px 0;
+    background-color: #007bff; /* 파란색 */
+    color: white;
+}
+
+#header .btn-search:hover {
+    background-color: #0056b3; /* 더 짙은 파란색 */
+    color: white;
+}

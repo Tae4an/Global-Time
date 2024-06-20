@@ -2,9 +2,11 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useUser } from '../context/UserContext';
-import './PostCreate.css'
+import { useTranslation } from 'react-i18next';
+import '../css/PostCreate.css'
 
 const PostCreate = () => {
+    const { t } = useTranslation();
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
     const { user } = useUser();
@@ -12,7 +14,7 @@ const PostCreate = () => {
 
     const handleSave = async () => {
         if (!user || !user.username) {
-            alert('로그인이 필요합니다.');
+            alert(t('loginRequired'));
             return;
         }
 
@@ -28,42 +30,44 @@ const PostCreate = () => {
                     'Content-Type': 'application/json'
                 }
             });
-            alert("게시글이 등록 됐습니다.");
+            alert(t('createSuccess'));
             navigate('/posts');
         } catch (error) {
-            console.error('There was an error creating the post!', error);
-            alert(`글 작성 중 오류가 발생했습니다: ${error.response?.data?.message || error.message}`);
+            console.error(t('createError'), error);
+            alert(`${t('createError')}: ${error.response?.data?.message || error.message}`);
         }
     };
 
     return (
-        <div className="container col-md-8">
+        <div className="container col-md-8 mt-5">
             <form>
                 <div className="form-group">
-                    <label htmlFor="title">제목</label>
+                    <label htmlFor="title">{t('title')}</label>
                     <input
                         type="text"
                         className="form-control"
                         id="title"
-                        placeholder="제목을 입력하세요"
+                        placeholder={t('titlePlaceholder')}
                         value={title}
                         onChange={(e) => setTitle(e.target.value)}
                     />
                 </div>
                 <div className="form-group">
-                    <label htmlFor="content">내용</label>
+                    <label htmlFor="content">{t('content')}</label>
                     <textarea
                         rows="10"
                         className="form-control"
                         id="content"
-                        placeholder="내용을 입력하세요"
+                        placeholder={t('contentPlaceholder')}
                         value={content}
                         onChange={(e) => setContent(e.target.value)}
                     ></textarea>
                 </div>
             </form>
-            <button type="button" onClick={handleSave} className="btn btn-primary bi bi-pencil-fill"> 작성</button>
-            <a href="/posts" role="button" className="btn btn-info bi bi-arrow-return-left"> 목록</a>
+            <div className="d-flex justify-content-end">
+                <button type="button" onClick={handleSave} className="btn btn-primary bi bi-pencil-fill"> {t('create')}</button>
+                <a href="/posts" role="button" className="btn btn-info bi bi-arrow-return-left"> {t('list')}</a>
+            </div>
         </div>
     );
 };
