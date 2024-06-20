@@ -295,7 +295,7 @@ const Comments = ({ postId, userId }) => {
 
     return (
         <div className="comments-container">
-            {comments.map(comment => (
+            {comments.map((comment) => (
                 <div key={comment.id} className="comment-card">
                     <div className="comment-header">
                         <span className="comment-author">{comment.nickname}</span>
@@ -304,14 +304,24 @@ const Comments = ({ postId, userId }) => {
                     <div className="comment-body">
                         <p>{showOriginalComments[comment.id] ? translatedComments[comment.id] : comment.comment}</p>
                     </div>
-                    <button onClick={() => handleTranslate(comment.id, comment.comment)} className="btn btn-secondary btn-sm">
-                        {showOriginalComments[comment.id] ? t('original') : t('translate')}
-                    </button>
-                    {user && user.nickname === comment.nickname && (
-                        <div className="comment-actions">
-                            <button onClick={() => handleDelete(comment.id)} className="btn btn-danger btn-sm">{t('delete')}</button>
-                        </div>
-                    )}
+                    <div className="d-flex">
+                        <button
+                            onClick={() => handleTranslate(comment.id, comment.comment)}
+                            className="btn btn-secondary btn-sm"
+                        >
+                            {showOriginalComments[comment.id] ? t('original') : t('translate')}
+                        </button>
+                        {user && user.nickname === comment.nickname && (
+                            <div className="comment-actions">
+                                <button
+                                    onClick={() => handleDelete(comment.id)}
+                                    className="btn btn-danger btn-sm ml-auto"
+                                >
+                                    {t('delete')}
+                                </button>
+                            </div>
+                        )}
+                    </div>
                 </div>
             ))}
             <CommentForm postId={postId} onCommentSubmit={addComment} />

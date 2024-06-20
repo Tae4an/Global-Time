@@ -2,12 +2,12 @@
     background-color: #ffffff;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    padding: 20px;
-    margin-top: 20px;
+    padding: 5px;
+    margin-top: 5px;
 }
 
 .comment-form .form-group {
-    margin-bottom: 15px;
+    margin-bottom: 5px;
 }
 
 .comment-form label {
@@ -18,7 +18,7 @@
 .comment-form .form-control {
     border-radius: 5px;
     border: 1px solid #ced4da;
-    padding: 10px;
+    padding: 5px;
     font-size: 1rem;
 }
 
@@ -30,7 +30,7 @@
 
 .comment-form .btn {
     border-radius: 5px;
-    padding: 10px 20px;
+    padding: 5px 10px;
     font-size: 1rem;
 }
 

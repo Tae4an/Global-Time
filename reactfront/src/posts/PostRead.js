@@ -217,7 +217,7 @@ const PostRead = ({ user }) => {
     useEffect(() => {
         const fetchPost = async () => {
             try {
-                const response = await axios.get(`http://localhost:8080/api/posts/${id}`);
+                const response = await axios.get(`/api/posts/${id}`);
                 setPost(response.data);
             } catch (error) {
                 setError(error);
@@ -299,8 +299,8 @@ const PostRead = ({ user }) => {
     return (
         <>
             <br />
-            <div id="posts_list">
-                <div className="col-md-12">
+            <div id="posts_list" className="d-flex justify-content-center align-items-center">
+                <div className="col-md-8">
                     <form className="card">
                         <div className="card-header d-flex justify-content-between">
                             <label htmlFor="id">{t('number')} : {post.id}</label>

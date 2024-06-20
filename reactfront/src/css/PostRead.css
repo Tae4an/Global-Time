@@ -1,92 +1,21 @@
 #posts_list {
-    margin: 20px;
-    background-color: #ffffff;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    padding: 20px;
+    min-height: 80vh; /* 페이지 콘텐츠 높이 설정 */
 }
 
 .card {
-    border: none;
-    margin-bottom: 20px;
+    width: 100%; /* 카드 너비 설정 */
+    margin: 20px 0; /* 카드 위아래 여백 설정 */
 }
 
 .card-header {
-    background-color: #f8f9fa;
-    border-bottom: 1px solid #dee2e6;
-    border-radius: 10px 10px 0 0;
-    padding: 15px;
+    background-color: #f8f9fa; /* 카드 헤더 배경색 */
+    border-bottom: 1px solid #ddd; /* 카드 헤더 아래 테두리 */
 }
 
 .card-body {
-    padding: 20px;
-}
-
-.card-header label {
-    font-weight: bold;
-    color: #343a40;
-}
-
-.card-body label {
-    font-weight: bold;
-    margin-top: 10px;
-}
-
-.form-control {
-    border-radius: 5px;
-    margin-bottom: 15px;
+    background-color: #fff; /* 카드 본문 배경색 */
 }
 
 .btn {
-    margin-right: 10px;
-    padding: 10px 20px;
-    border-radius: 5px;
-}
-
-.btn-primary {
-    background-color: #007bff;
-    border-color: #007bff;
-}
-
-.btn-primary:hover {
-    background-color: #0056b3;
-    border-color: #004085;
-}
-
-.btn-info {
-    background-color: #17a2b8;
-    border-color: #17a2b8;
-}
-
-.btn-info:hover {
-    background-color: #117a8b;
-    border-color: #0f6674;
-}
-
-.btn-secondary {
-    background-color: #6c757d;
-    border-color: #6c757d;
-}
-
-.btn-secondary:hover {
-    background-color: #5a6268;
-    border-color: #545b62;
-}
-
-.btn-danger {
-    background-color: #dc3545;
-    border-color: #dc3545;
-}
-
-.btn-danger:hover {
-    background-color: #c82333;
-    border-color: #bd2130;
-}
-
-.mt-1 {
-    margin-top: 10px;
-}
-
-.mt-2 {
-    margin-top: 20px;
+    margin: 5px; /* 버튼 간격 설정 */
 }
